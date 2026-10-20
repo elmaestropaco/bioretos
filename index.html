@@ -1,0 +1,3091 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioRetos · Biología y Geología 1º ESO</title>
+<meta name="application-name" content="BioRetos">
+<meta name="description" content="BioRetos - Juego interactivo de retos científicos de Biología y Geología para 1º ESO. Desafíos, método científico y pensamiento crítico.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+  <defs>
+    <linearGradient id='bgGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#0f172a' />
+      <stop offset='50%' stop-color='#064e3b' />
+      <stop offset='100%' stop-color='#022c22' />
+    </linearGradient>
+    <linearGradient id='glowGrad' x1='0%' y1='0%' x2='100%' y2='100%'>
+      <stop offset='0%' stop-color='#10b981' />
+      <stop offset='100%' stop-color='#06b6d4' />
+    </linearGradient>
+  </defs>
+  <rect width='64' height='64' rx='18' fill='url(#bgGrad)' stroke='#10b981' stroke-width='2.5' />
+  <ellipse cx='32' cy='32' rx='22' ry='9' fill='none' stroke='url(#glowGrad)' stroke-width='2.5' transform='rotate(-25 32 32)' opacity='0.85' />
+  <g fill='none' stroke='#ffffff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'>
+    <path d='M26 44h12' />
+    <path d='M22 48h20' />
+    <path d='M38 48a9 9 0 0 0-5-16h-2' />
+    <path d='M28 36h4' />
+    <path d='M30 32a3 3 0 0 1-3-3v-6h6v6a3 3 0 0 1-3 3Z' />
+    <path d='M30 23v-4' />
+  </g>
+  <circle cx='16' cy='18' r='2.2' fill='#34d399' />
+  <circle cx='48' cy='46' r='1.8' fill='#38bdf8' />
+</svg>">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<style>
+/* ==========================================================================
+   RESET & MODERN THEMING (Vibrant Gamified Science UI for 1º ESO)
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 50%, #061e1b 100%);
+  --card-bg: rgba(26, 34, 53, 0.88);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.35);
+  --accent-cyan: #06b6d4;
+  --accent-indigo: #6366f1;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --option-bg: rgba(30, 41, 59, 0.8);
+  --option-border: rgba(148, 163, 184, 0.2);
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-card: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
+}
+
+body {
+  background: #090d16;
+  background-image: var(--bg-gradient);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 30px 16px 60px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Ambient Background Glow Orbs */
+.ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-1 {
+  width: 450px;
+  height: 450px;
+  background: rgba(16, 185, 129, 0.12);
+  top: -100px;
+  left: 5%;
+}
+.glow-2 {
+  width: 500px;
+  height: 500px;
+  background: rgba(6, 182, 212, 0.12);
+  bottom: -150px;
+  right: 5%;
+}
+
+/* Main Container */
+.container {
+  width: 100%;
+  max-width: 860px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.logo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+}
+
+.logo-title {
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.logo-title .logo-accent {
+  background: linear-gradient(135deg, #34d399 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+/* Cards Base */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 34px 32px;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* SVG Icons Utility */
+.svg-icon {
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  vertical-align: -0.2em;
+  fill: currentColor;
+}
+.svg-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin="round";
+}
+
+/* ==========================================================================
+   SCREEN 1: SETUP & TOPIC ACCORDION
+   ========================================================================== */
+.setup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.main-sec-title {
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.sec-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   TEMA ACCORDION SYSTEM (Collapsible Blocks)
+   ========================================================================== */
+.temas-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 26px;
+}
+
+.tema-accordion {
+  background: rgba(18, 25, 41, 0.7);
+  border: 1.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tema-accordion:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.tema-accordion.open {
+  border-color: rgba(16, 185, 129, 0.55);
+  background: rgba(22, 31, 51, 0.95);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(16, 185, 129, 0.15);
+}
+
+.tema-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s ease;
+}
+
+.tema-header:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.tema-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.tema-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #34d399;
+  flex-shrink: 0;
+}
+
+.tema-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tema-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tema-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.tema-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.tema-badge-count {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  transition: all 0.2s;
+}
+
+.tema-badge-count.zero {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.tema-chevron {
+  width: 24px;
+  height: 24px;
+  color: var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s;
+}
+
+.tema-accordion.open .tema-chevron {
+  transform: rotate(180deg);
+  color: #34d399;
+}
+
+/* Collapsible Body */
+.tema-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  border-top: 1px solid transparent;
+}
+
+.tema-accordion.open .tema-body {
+  max-height: 2500px;
+  opacity: 1;
+  pointer-events: auto;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.tema-body-inner {
+  padding: 20px;
+}
+
+.tema-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.tema-actions-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tema-actions-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-mini {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-mini:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #ffffff;
+}
+
+/* Grid of Apartados */
+.topic-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .topic-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.topic-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  user-select: none;
+}
+
+.topic-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.topic-item.active {
+  background: rgba(16, 185, 129, 0.09);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.topic-checkbox-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.topic-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topic-item.active .topic-checkbox {
+  background: var(--accent-emerald);
+  border-color: var(--accent-emerald);
+}
+
+.topic-checkbox-check {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  color: white;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.topic-item.active .topic-checkbox-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.topic-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.topic-item.active .topic-icon-wrap {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.topic-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.topic-name {
+  font-weight: 700;
+  font-size: 0.96rem;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.topic-badge {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Mode Selector */
+.mode-selector {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.mode-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 600px) {
+  .mode-options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mode-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mode-btn.active {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: var(--accent-emerald);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+}
+
+/* Primary Big Button */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 16px 24px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.55);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ==========================================================================
+   SCREEN 2: GAMEPLAY
+   ========================================================================== */
+.game-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.category-chip {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #c7d2fe;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stats-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-pill {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #fbbf24;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.streak-pill {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.sound-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sound-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.08);
+}
+
+/* Progress Track */
+.progress-container {
+  margin-bottom: 24px;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+  border-radius: 999px;
+  width: 0%;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Question Title */
+.question-title {
+  font-size: clamp(1.22rem, 2.8vw, 1.55rem);
+  font-weight: 800;
+  line-height: 1.45;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+/* Options */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-btn {
+  background: var(--option-bg);
+  border: 1.5px solid var(--option-border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  text-align: left;
+  color: var(--text-main);
+  font-size: 1.02rem;
+  line-height: 1.45;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(4px);
+}
+
+.option-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.option-btn:hover:not(:disabled) .option-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.option-btn.correct {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+.option-btn.correct .option-badge {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.option-btn.incorrect {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+.option-btn.incorrect .option-badge {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+/* ==========================================================================
+   EXPLANATION CARD (SI HAY ERROR O ACIERTO)
+   ========================================================================== */
+.explanation-card {
+  margin-top: 22px;
+  padding: 22px 24px;
+  border-radius: var(--radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.explanation-card.correct {
+  background: #064e3b;
+  border-color: #10b981;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+}
+
+.explanation-card.incorrect {
+  background: #450a0a;
+  border-color: #ef4444;
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.35);
+}
+
+.explanation-status {
+  font-weight: 900;
+  font-size: 1.18rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.explanation-card.correct .explanation-status {
+  color: #6ee7b7;
+}
+.explanation-card.incorrect .explanation-status {
+  color: #fca5a5;
+}
+
+.explanation-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #f8fafc;
+  margin-bottom: 20px;
+}
+
+.explanation-text strong {
+  color: #ffffff;
+}
+
+.btn-next {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-next:hover {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+/* ==========================================================================
+   RESULTS SCREEN
+   ========================================================================== */
+.results-card {
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.trophy-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: bounce-trophy 2s infinite ease-in-out;
+}
+
+@keyframes bounce-trophy {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.results-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.results-rank {
+  color: #34d399;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 26px;
+}
+
+.score-display {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+@media (min-width: 600px) {
+  .score-display {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.score-box {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.score-num {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.score-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.results-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Review Section */
+.review-section {
+  margin-top: 32px;
+  text-align: left;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+}
+
+.review-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f59e0b;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.review-item-q {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.review-item-answers {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.review-item-user {
+  color: #fca5a5;
+  margin-bottom: 4px;
+}
+
+.review-item-correct {
+  color: #6ee7b7;
+  font-weight: 700;
+}
+
+.review-item-exp {
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #10b981;
+  line-height: 1.45;
+}
+
+/* Confetti Canvas */
+#confettiCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<div class="container">
+
+  <header>
+    <div class="logo-badge">
+      <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3"/></svg>
+      1º ESO · Biología y Geología
+    </div>
+    <h1 class="logo-title"><span class="logo-accent">Bio</span>Retos</h1>
+    <p class="subtitle">Desafíos, método científico y pensamiento crítico para futuros investigadores</p>
+  </header>
+
+  <!-- =========================================================================
+       SCREEN 1: SETUP & TOPIC ACCORDION
+       ========================================================================= -->
+  <div id="setupScreen" class="card">
+    <div class="setup-header">
+      <div class="section-title">
+        <div class="section-title-icon">
+          <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15ZM9 8h6M9 12h4"/></svg>
+        </div>
+        <div>
+          <div class="main-sec-title">Temas y apartados de reto</div>
+          <div class="sec-subtitle" id="globalSelectionSubtitle">8 apartados marcados (88 retos listos)</div>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button type="button" class="btn-small" onclick="seleccionarTodosGlobal(true)" title="Marcar todos los apartados">
+          <svg class="svg-icon svg-stroke" viewBox="0 0 24 24" style="width:1.1em;height:1.1em;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Todos
+        </button>
+        <button type="button" class="btn-small" onclick="seleccionarTodosGlobal(false)" title="Desmarcar todos los apartados">
+          <svg class="svg-icon svg-stroke" viewBox="0 0 24 24" style="width:1.1em;height:1.1em;"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Ninguno
+        </button>
+      </div>
+    </div>
+
+    <!-- Accordion Container for Temas -->
+    <div class="temas-container" id="temasAccordionContainer">
+      <!-- Injected by JavaScript from BLOQUES_TEMAS -->
+    </div>
+
+    <div class="mode-selector">
+      <div class="mode-title">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        Modo de juego
+      </div>
+      <div class="mode-options">
+        <button type="button" class="mode-btn active" data-mode="all" onclick="setMode('all')">
+          <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          Todas las marcadas
+        </button>
+        <button type="button" class="mode-btn" data-mode="10" onclick="setMode('10')">
+          <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Rápido (10 preguntas)
+        </button>
+        <button type="button" class="mode-btn" data-mode="20" onclick="setMode('20')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          Desafío (20 preguntas)
+        </button>
+      </div>
+    </div>
+
+    <button type="button" class="btn-primary" id="btnStartGame" onclick="iniciarJuego()">
+      <svg class="svg-icon svg-stroke" viewBox="0 0 24 24" style="width:1.3em;height:1.3em;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+      ¡Comenzar Reto Científico!
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       SCREEN 2: GAMEPLAY
+       ========================================================================= -->
+  <div id="gameScreen" class="card hidden">
+    <div class="game-top-bar">
+      <div class="category-chip" id="categoryBadge">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-30 12 12)"/></svg>
+        <span id="categoryName">Categoría</span>
+      </div>
+      
+      <div class="stats-bar">
+        <div class="stat-pill">
+          <svg class="svg-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span id="scoreText">0</span> XP
+        </div>
+        <div class="stat-pill streak-pill hidden" id="streakBadge">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+          x<span id="streakText">0</span>
+        </div>
+        <button type="button" class="sound-toggle-btn" id="soundBtn" onclick="toggleSound()" title="Silenciar / Activar sonido">
+          <!-- Injected SVG -->
+        </button>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-labels">
+        <span id="progressText">Pregunta 1 de 10</span>
+        <span id="progressPercent">10%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+
+    <h2 class="question-title" id="questionText">Cargando reto...</h2>
+
+    <div class="options-grid" id="optionsContainer">
+      <!-- Options injected by JS -->
+    </div>
+
+    <div id="explanationBox" class="explanation-card hidden">
+      <div class="explanation-status" id="explanationStatus"></div>
+      <div class="explanation-text" id="explanationContent"></div>
+      <button type="button" class="btn-next" id="btnNext" onclick="siguientePregunta()">
+        <span>Siguiente reto</span>
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24" style="width:1.2em;height:1.2em;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       SCREEN 3: RESULTS
+       ========================================================================= -->
+  <div id="resultScreen" class="card results-card hidden">
+    <div class="trophy-icon" id="resultTrophy">🏆</div>
+    <h2 class="results-title" id="resultTitle">¡Reto Completado!</h2>
+    <p class="results-rank" id="resultRank">Investigador de Élite</p>
+
+    <div class="score-display">
+      <div class="score-box">
+        <div class="score-num" id="finalCorrect">0/0</div>
+        <div class="score-label">Aciertos</div>
+      </div>
+      <div class="score-box">
+        <div class="score-num" id="finalPercent">0%</div>
+        <div class="score-label">Efectividad</div>
+      </div>
+      <div class="score-box">
+        <div class="score-num" id="finalXP">0</div>
+        <div class="score-label">XP Conseguido</div>
+      </div>
+      <div class="score-box">
+        <div class="score-num" id="finalMaxStreak">0</div>
+        <div class="score-label">Máx. Racha 🔥</div>
+      </div>
+    </div>
+
+    <div class="results-actions">
+      <button type="button" class="btn-primary" onclick="reiniciarMismosTemas()" style="width:auto;">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>
+        Jugar de nuevo
+      </button>
+      <button type="button" class="btn-secondary" onclick="volverAjustes()">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Cambiar temas
+      </button>
+      <button type="button" class="btn-secondary hidden" id="btnReview" onclick="toggleReview()">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M8 2h8v4H8zM9 11h6M9 15h4"/></svg>
+        Repasar fallos (<span id="reviewCount">0</span>)
+      </button>
+    </div>
+
+    <div id="reviewContainer" class="review-section hidden">
+      <div class="review-title">
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>
+        Explicaciones de las preguntas falladas:
+      </div>
+      <div class="review-list" id="reviewList">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- =========================================================================
+     JAVASCRIPT GAME ENGINE
+     ========================================================================= -->
+<script>
+// SVG ICONS LIBRARY (Pure vector, guaranteed rendering on all OS)
+const SVG_ICONS = {
+  microscope: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M6 18h8M3 22h18M14 22a7 7 0 1 0 0-14h-1M9 14h2M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2ZM12 6V3a1 1 0 0 0-1-1h-2a1 1 0 0 0-1 1v3"/></svg>`,
+  atom: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(30 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4" transform="rotate(-30 12 12)"/></svg>`,
+  dna: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="m2 15 2.5-2.5M20 9l2.5-2.5M15 2l2.5 2.5M9 20l2.5 2.5M5 19l14-14M19 19 5 5"/><circle cx="7" cy="7" r="1.5"/><circle cx="17" cy="17" r="1.5"/><circle cx="17" cy="7" r="1.5"/><circle cx="7" cy="17" r="1.5"/></svg>`,
+  ruler: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M21.3 8.7 8.7 21.3a1 1 0 0 1-1.4 0l-5.6-5.6a1 1 0 0 1 0-1.4L14.3 1.7a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4ZM7.5 10.5l2 2M10.5 7.5l2 2M13.5 4.5l2 2M4.5 13.5l2 2"/></svg>`,
+  flask: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M10 2v5.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 7.5V2M8.5 2h7M7 15h10"/></svg>`,
+  shield: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/><path d="m14.5 13.5 2 2"/></svg>`,
+  film: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>`,
+  sprout: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><path d="M7 20h10M12 20v-8M12 12c0-4.4 3.6-8 8-8 0 4.4-3.6 8-8 8ZM12 12c0-4.4-3.6-8-8-8 0 4.4 3.6 8 8 8Z"/></svg>`,
+  check: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`,
+  cross: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+  chevron: `<svg class="tema-chevron svg-stroke" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`,
+  soundOn: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>`,
+  soundOff: `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`
+};
+
+// TEMA 1 HIERARCHICAL CONFIGURATION (Extensible for Tema 2, 3...)
+const BLOQUES_TEMAS = [
+  {
+    id: "tema_1",
+    numero: 1,
+    titulo: "Tema 1: La Investigación Científica",
+    descripcion: "El método científico, pioneros, laboratorio, detección de bulos y ciencia del suelo",
+    icono: "microscope",
+    apartados: [
+      { id: "¿Qué es la ciencia?", icon: "atom", desc: "El conocimiento científico y pseudociencias" },
+      { id: "Científicos relevantes en ByG", icon: "dna", desc: "Pioneros y descubrimientos históricos" },
+      { id: "El método científico", icon: "microscope", desc: "Variables, hipótesis y experimentación" },
+      { id: "El lenguaje científico", icon: "ruler", desc: "Unidades SI, gráficos y nomenclatura" },
+      { id: "El trabajo científico", icon: "flask", desc: "Laboratorio, seguridad y pictogramas" },
+      { id: "Aprendemos a detectar bulos", icon: "shield", desc: "Pensamiento crítico y fake news" },
+      { id: "ByG en el cine", icon: "film", desc: "Ciencia real vs mitos de Hollywood" },
+      { id: "Miguel Delgado Baquerizo y la importancia del suelo", icon: "sprout", desc: "Microbioma, CSIC y salud del suelo" }
+    ]
+  }
+  // Más adelante se pueden añadir fácilmente aquí:
+  // { id: "tema_2", numero: 2, titulo: "Tema 2: La Tierra en el Universo", ... }
+];
+
+// FULL VALIDATED DATABASE (88 Questions: 11 per apartado)
+const bancoPreguntas = [
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Cuál es el objetivo principal de la investigación científica?",
+    "opciones": [
+      "Explicar y comprender los fenómenos naturales basándose en pruebas y evidencias",
+      "Inventar relatos fantásticos para entretener a la sociedad",
+      "Establecer dogmas y verdades absolutas que nadie pueda cuestionar jamás",
+      "Imponer opiniones personales basadas en la fama de quien las pronuncia"
+    ],
+    "correcta": 0,
+    "explicacion": "La ciencia busca entender cómo funciona el universo mediante observaciones, experimentos y pruebas empíricas. A diferencia de las opiniones o creencias, el conocimiento científico siempre puede revisarse y mejorarse si surgen nuevas evidencias."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "Un anuncio de televisión promociona un abono llamado \"BioQuantum\" asegurando que 'multiplica por diez tus tomates con energía cósmica'. ¿Por qué se considera una pseudociencia?",
+    "opciones": [
+      "Porque utiliza palabras que suenan a ciencia pero no aporta pruebas ni experimentos contrastables",
+      "Porque la energía cósmica es una disciplina botánica demostrada",
+      "Porque está prohibido por ley que las plantas crezcan más rápido",
+      "Porque ningún producto anunciado en medios de comunicación puede ser real"
+    ],
+    "correcta": 0,
+    "explicacion": "Las pseudociencias copian palabras científicas complejas (como 'cuántico' o 'bioenergía') y usan testimonios personales, pero carecen de experimentos controlados, datos cuantitativos medibles y revisión de la comunidad científica."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Qué ocurre en la ciencia cuando un nuevo experimento riguroso contradice una teoría que se creía indiscutible?",
+    "opciones": [
+      "Se comprueba el experimento y, si se confirma, la teoría científica se modifica o sustituye",
+      "Se ocultan los nuevos resultados para proteger la teoría tradicional",
+      "Se expulsa de la comunidad científica al investigador que realizó el experimento",
+      "Se hace una votación popular en internet para decidir cuál es la más bonita"
+    ],
+    "correcta": 0,
+    "explicacion": "El conocimiento científico es dinámico y provisional. Ninguna idea es intocable: cuando surgen pruebas reproducibles y verificables que desmienten una teoría antigua, la ciencia avanza actualizando y corrigiendo sus modelos."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "Una persona afirma: 'A mí me dolía la cabeza, me puse una moneda de cobre en la frente y se me pasó. ¡Está científicamente comprobado!'. ¿Qué error básico comete?",
+    "opciones": [
+      "Confundir una experiencia personal anecdótica con una prueba científica válida",
+      "Pensar que el cobre es un metal, cuando en realidad es un plástico",
+      "No haber usado una moneda de plata o de oro para tener más rigor",
+      "Haber colocado la moneda en la frente en vez de en el bolsillo"
+    ],
+    "correcta": 0,
+    "explicacion": "Una anécdota aislada puede deberse al efecto placebo, al paso natural del tiempo o a la casualidad. Para que algo esté científicamente demostrado se requieren ensayos clínicos con muchos participantes y grupos de control."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Qué significa que una hipótesis o enunciado científico debe ser 'falsable'?",
+    "opciones": [
+      "Que debe ser posible diseñar un experimento o prueba que pueda demostrar que es falsa si no se cumple",
+      "Que siempre debe contener mentiras para despistar a la competencia",
+      "Que solo los científicos falsificadores autorizados pueden ponerla a prueba",
+      "Que resulta absolutamente imposible de comprobar mediante la experiencia"
+    ],
+    "correcta": 0,
+    "explicacion": "La falsabilidad (planteada por Karl Popper) es un pilar científico: una afirmación solo es científica si existe alguna manera lógica y experimental de comprobar si falla. Si una idea no se puede poner a prueba de ninguna forma, pertenece al campo de la fe o la creencia, no de la ciencia."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Qué rama de las ciencias naturales se encarga específicamente de estudiar la estructura interna, rocas, minerales y evolución de la Tierra?",
+    "opciones": [
+      "La Geología",
+      "La Astrología",
+      "La Botánica",
+      "La Fisiología"
+    ],
+    "correcta": 0,
+    "explicacion": "La Geología estudia la geosfera: rocas, minerales, placas tectónicas, volcanes y fósiles. La Biología estudia los seres vivos, mientras que la Astrología no es una ciencia."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Por qué los horóscopos y la astrología NO forman parte de la ciencia?",
+    "opciones": [
+      "Porque no aplican el método científico, sus predicciones son vagas y no superan las pruebas estadísticas",
+      "Porque las estrellas y planetas no existen realmente en el cielo",
+      "Porque los astrólogos utilizan fórmulas matemáticas demasiado avanzadas para el público",
+      "Porque es una ciencia tan nueva que todavía no se ha publicado en revistas"
+    ],
+    "correcta": 0,
+    "explicacion": "La astrología se basa en supersticiones medievales sobre la posición de los astros en el nacimiento. La ciencia real que estudia los cuerpos celestes con física y telescopios es la Astronomía."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Qué propiedad fundamental debe tener un experimento para que sus conclusiones sean aceptadas?",
+    "opciones": [
+      "Reproducibilidad: otros investigadores deben poder repetirlo en cualquier lugar y obtener los mismos resultados",
+      "Secreto profesional: ningún otro científico debe enterarse de cómo se hizo",
+      "Rapidez: debe realizarse obligatoriamente en menos de diez minutos",
+      "Debe confirmar siempre los deseos iniciales del investigador"
+    ],
+    "correcta": 0,
+    "explicacion": "La reproducibilidad garantiza que los resultados no fueron fruto del azar, un fallo de medición o un fraude. La ciencia es pública y colaborativa: cualquier laboratorio con el mismo protocolo debe llegar a las mismas conclusiones."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Cuál de las siguientes afirmaciones es un hecho científico comprobable y objetivo?",
+    "opciones": [
+      "El agua pura se congela a 0 °C al nivel del mar bajo una atmósfera de presión",
+      "Los minerales de color morado transmiten paz espiritual al dormitorio",
+      "El otoño es una estación mucho más poética e interesante que la primavera",
+      "Los perros tienen mejores sentimientos que los gatos"
+    ],
+    "correcta": 0,
+    "explicacion": "El punto de congelación del agua es una magnitud física medible, cuantificable y reproducible en cualquier laboratorio. Las sensaciones espirituales o los gustos estéticos son percepciones subjetivas."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Qué es el 'efecto placebo' que la ciencia médica vigila en sus ensayos clínicos?",
+    "opciones": [
+      "La mejoría que experimenta una persona por la convicción psicológica de estar recibiendo una cura, no por el medicamento en sí",
+      "Una reacción alérgica grave producida por beber agua destilada",
+      "El aumento repentino de temperatura en un tubo de ensayo",
+      "El crecimiento acelerado de bacterias en una placa de cultivo"
+    ],
+    "correcta": 0,
+    "explicacion": "La mente humana puede reducir el dolor o síntomas simplemente creyendo que ha tomado un fármaco. Por eso los ensayos clínicos usan grupos de control con sustancias neutras (placebo) en ensayos a doble ciego para medir la eficacia real de la molécula."
+  },
+  {
+    "tema": "¿Qué es la ciencia?",
+    "pregunta": "¿Cuál de estas características define la actitud de una persona con mentalidad científica?",
+    "opciones": [
+      "Curiosidad, pensamiento crítico, rigor al medir y disposición a cambiar de opinión ante nuevas pruebas",
+      "Aceptar sin dudar cualquier afirmación que tenga muchos 'me gusta' en internet",
+      "Defender una opinión personal aunque todos los experimentos demuestren lo contrario",
+      "Rechazar el trabajo en equipo para no compartir descubrimientos con nadie"
+    ],
+    "correcta": 0,
+    "explicacion": "El espíritu científico se basa en dudar razonablemente, investigar con honestidad y aceptar la realidad que muestran los datos, incluso cuando contradicen lo que uno esperaba inicialmente."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué naturalista británico propuso la teoría de la evolución biológica mediante selección natural en su obra de 1859?",
+    "opciones": [
+      "Charles Darwin",
+      "Isaac Newton",
+      "Albert Einstein",
+      "Galileo Galilei"
+    ],
+    "correcta": 0,
+    "explicacion": "Charles Darwin explicó en 'El origen de las especies' que los individuos con variaciones ventajosas para su entorno sobreviven mejor y dejan más descendientes, adaptando las especies con el paso del tiempo."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "Rosalind Franklin fue una brillante científica cuyos experimentos de difracción de rayos X (la célebre 'Fotografía 51') fueron decisivos para descubrir...",
+    "opciones": [
+      "La estructura en doble hélice de la molécula de ADN",
+      "La existencia de los cráteres volcánicos en Marte",
+      "El primer fósil completo de un dinosaurio marino",
+      "El núcleo interno de hierro de la geosfera"
+    ],
+    "correcta": 0,
+    "explicacion": "La química británica Rosalind Franklin logró la nítida 'Fotografía 51' de difracción de rayos X. Su colega Maurice Wilkins mostró sus datos sin su permiso a Watson y Crick, quienes dedujeron la doble hélice y recibieron el Premio Nobel tras su fallecimiento."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Con qué vegetal experimentó Gregor Mendel en el huerto de su monasterio para descubrir los principios de la herencia genética?",
+    "opciones": [
+      "Plantas de guisante común (*Pisum sativum*)",
+      "Árboles de manzano silvestre",
+      "Semillas de trigo sarraceno",
+      "Plantas carnívoras de pantano"
+    ],
+    "correcta": 0,
+    "explicacion": "Mendel cruzó metódicamente miles de plantas de guisante analizando rasgos sencillos (color y textura de la semilla, color de flor). Descubrió que los caracteres se heredan como unidades discretas (los factores mendelianos, hoy llamados genes)."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué teoría errónea desmintió definitivamente Louis Pasteur usando matraces de vidrio con cuello de cisne curvado?",
+    "opciones": [
+      "La teoría de la generación espontánea (que los seres vivos surgen de la nada en la basura)",
+      "La teoría de que la Tierra es redonda",
+      "La teoría de la gravedad universal",
+      "La teoría celular de los seres vivos"
+    ],
+    "correcta": 0,
+    "explicacion": "Pasteur demostró que si se hierve un caldo nutritivo en un matraz con cuello curvo para que no entren motas de polvo del aire, no se desarrollan microorganismos. La vida solo procede de otra vida preexistente."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Quién fue el científico inglés que observó una fina lámina de corcho con un microscopio rudimentario en 1665 y acuñó el término 'célula'?",
+    "opciones": [
+      "Robert Hooke",
+      "Alexander Fleming",
+      "Antonie van Leeuwenhoek",
+      "Carl Sagan"
+    ],
+    "correcta": 0,
+    "explicacion": "Hooke publicó sus observaciones en el libro 'Micrographia'. Al ver los huecos geométricos que dejaban las paredes vegetales del corcho muerto, le recordaron a las celdillas de un panal de abejas o a las habitaciones de los monjes, y las llamó células."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué revolucionaria hipótesis geológica propuso Alfred Wegener en 1912 al observar que las costas de América del Sur y África encajaban como un rompecabezas?",
+    "opciones": [
+      "La teoría de la deriva continental (los continentes estuvieron unidos en Pangea y se desplazan)",
+      "Que la Tierra es hueca y está habitada por seres gigantes en su interior",
+      "Que los océanos se secan cada cien años para volver a llenarse",
+      "Que las montañas surgen cuando impacta un cometa contra el suelo"
+    ],
+    "correcta": 0,
+    "explicacion": "Wegener aportó pruebas geográficas, fósiles y climáticas de que los continentes actuales formaban un supercontinente llamado Pangea. Sus ideas fueron la semilla de la moderna Tectónica de Placas."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Por qué descubrimiento trascendental recibió el médico y científico español Santiago Ramón y Cajal el Premio Nobel en 1906?",
+    "opciones": [
+      "Por demostrar la doctrina de la neurona: el sistema nervioso está formado por células individuales independientes",
+      "Por descubrir la penicilina en un plato con moho contaminado",
+      "Por inventar el microscopio electrónico de barrido",
+      "Por diseñar la primera vacuna humana contra la viruela"
+    ],
+    "correcta": 0,
+    "explicacion": "Antes de Cajal se creía que el cerebro era una red continua indiferenciada. Con paciencia y tinciones de plata, Cajal demostró que las neuronas son células separadas que se comunican por contigüidad a través de sinapsis."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué descubrimiento pionero realizó la primatóloga Jane Goodall conviviendo con chimpancés en el Parque Nacional de Gombe (Tanzania)?",
+    "opciones": [
+      "Descubrió que los chimpancés fabrican y utilizan herramientas (como tallos pelados para pescar termitas)",
+      "Descubrió que los monos salvajes saben leer mapas topográficos",
+      "Demostró que los primates solo comen frutos maduros y jamás cazan en grupo",
+      "Descubrió que los chimpancés construyen chozas de piedra para resguardarse"
+    ],
+    "correcta": 0,
+    "explicacion": "Hasta la observación de Goodall en 1960, la ciencia definía al ser humano como la única especie capaz de crear herramientas. Ver a un chimpancé modificar una ramita para alimentarse revolucionó el estudio de la inteligencia animal."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "La bióloga Lynn Margulis transformó la biología celular moderna al demostrar la 'Teoría Endosimbiótica', que explica que...",
+    "opciones": [
+      "Orgánulos como las mitocondrias y los cloroplastos surgieron de bacterias primitivas que se integraron dentro de otra célula",
+      "Todas las células vivas nacen a partir de cristales minerales del fondo oceánico",
+      "Los dinosaurios se extinguieron debido a un virus mutante que afectaba a sus escamas",
+      "Las plantas respiran dióxido de carbono directamente a través de sus flores"
+    ],
+    "correcta": 0,
+    "explicacion": "Margulis demostró que mitocondrias y cloroplastos conservan su propio ADN circular y ribosomas de tipo bacteriano. Eran bacterias de vida libre que hace miles de millones de años se fusionaron en simbiosis mutualista con células hospedadoras."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué científico español fue galardonado con el Premio Nobel de Fisiología o Medicina en 1959 por descifrar la síntesis del ARN y el código genético?",
+    "opciones": [
+      "Severo Ochoa",
+      "Félix Rodríguez de la Fuente",
+      "Miguel Servet",
+      "Juan de la Cierva"
+    ],
+    "correcta": 0,
+    "explicacion": "El asturiano Severo Ochoa aisló la enzima polinucleótido fosforilasa, un paso crucial que permitió sintetizar ARN en el laboratorio y desentrañar cómo las instrucciones del ADN se traducen en proteínas."
+  },
+  {
+    "tema": "Científicos relevantes en ByG",
+    "pregunta": "¿Qué comerciante holandés construyó diminutos microscopios de una sola lente y fue el primero en observar bacterias y protozoos vivos?",
+    "opciones": [
+      "Antonie van Leeuwenhoek",
+      "Johannes Kepler",
+      "René Descartes",
+      "Leonardo da Vinci"
+    ],
+    "correcta": 0,
+    "explicacion": "Leeuwenhoek pulía lentes de aumento milimétricas con las que alcanzó más de 200 aumentos. Observó por primera vez glóbulos rojos y miles de microorganismos nadando en gotas de agua estancada y sarro dental, a los que llamó 'animálculos'."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "¿Cuál es la secuencia lógica y ordenada de las etapas del método científico?",
+    "opciones": [
+      "Observación ➔ Pregunta ➔ Hipótesis ➔ Experimentación ➔ Análisis de datos ➔ Conclusiones",
+      "Conclusiones ➔ Experimento ➔ Observación ➔ Pregunta ➔ Hipótesis",
+      "Hipótesis ➔ Publicación ➔ Experimento ➔ Duda ➔ Observación",
+      "Pregunta ➔ Teoría indiscutible ➔ Experimento ➔ Rechazar resultados"
+    ],
+    "correcta": 0,
+    "explicacion": "La investigación empieza observando un fenómeno intrigante, definiendo el problema en una pregunta concreta, formulando una hipótesis contrastable, experimentando para recopilar datos objetivos y analizando los resultados para sacar conclusiones."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "En una investigación científica escolar, ¿qué es exactamente una hipótesis?",
+    "opciones": [
+      "Una suposición razonada y comprobable que ofrece una respuesta tentativa al problema planteado",
+      "El resumen final de notas que el profesor entrega al terminar el trimestre",
+      "Una verdad absoluta que no necesita ser contrastada con ningún experimento",
+      "El conjunto de instrumentos de vidrio que se colocan sobre la mesa del laboratorio"
+    ],
+    "correcta": 0,
+    "explicacion": "Una hipótesis no es una corazonada al azar: es una propuesta con base científica que intenta explicar por qué ocurre algo. Su característica esencial es que debe poder ponerse a prueba experimentalmente."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "Unos alumnos investigan cómo influye la cantidad de agua en el crecimiento de macetas de judías. ¿Cuál es la VARIABLE INDEPENDIENTE de su experimento?",
+    "opciones": [
+      "La cantidad de agua suministrada a cada maceta",
+      "La altura final que alcanzan los tallos de judía",
+      "El tipo de tierra utilizada en el experimento",
+      "La temperatura del aula donde están colocadas las macetas"
+    ],
+    "correcta": 0,
+    "explicacion": "La variable independiente es el factor que el experimentador manipula o cambia intencionadamente (la causa). En este caso, variar los mililitros de agua de riego para ver su efecto."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "En el mismo experimento con judías, ¿cuál es la VARIABLE DEPENDIENTE?",
+    "opciones": [
+      "El crecimiento o altura de las plantas en centímetros (lo que se mide)",
+      "El volumen de agua medido con la probeta",
+      "El material del que está fabricada la maceta",
+      "El nombre del alumno encargado de regar los lunes"
+    ],
+    "correcta": 0,
+    "explicacion": "La variable dependiente es el efecto que se mide u observa; su valor depende de los cambios introducidos en la variable independiente (a más o menos agua, medimos cuántos centímetros crece la planta)."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "¿Por qué todas las macetas del experimento deben tener la misma tierra, el mismo tamaño y recibir las mismas horas de sol?",
+    "opciones": [
+      "Para controlar las demás variables y asegurar que las diferencias solo se deban a la cantidad de agua",
+      "Para que el aula de ciencias luzca más ordenada y decorada",
+      "Para que las plantas no compitan entre sí por la comida",
+      "Porque las leyes de la botánica prohíben cambiar de tipo de sustrato"
+    ],
+    "correcta": 0,
+    "explicacion": "Las variables controladas deben mantenerse idénticas en todas las muestras. Si una planta con poca agua estuviera a la sombra y otra con mucha agua al sol, no sabríamos si la diferencia se debe al agua o a la luz solar."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "¿Cuál es la función del 'GRUPO DE CONTROL' en un experimento biológico?",
+    "opciones": [
+      "Servir de referencia o patrón bajo condiciones normales para comparar los efectos del experimento",
+      "Vigilar a los compañeros de clase para que no derramen líquidos en el suelo",
+      "Eliminar del cuaderno las cifras que no le gusten al equipo",
+      "Subir las fotos de las plantas a las redes sociales del colegio"
+    ],
+    "correcta": 0,
+    "explicacion": "El grupo de control se mantiene en condiciones habituales sin aplicarle la variable experimental (por ejemplo, plantas regadas con agua normal frente a plantas con agua salada). Sirve como base para saber si el cambio produjo efectos reales."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "Un alumno prueba un abono casero en una sola maceta; la planta se seca y afirma rotundamente: '¡Este abono mata todas las plantas del mundo!'. ¿Qué error metodológico cometió?",
+    "opciones": [
+      "Muestra insuficiente: no se puede extraer una conclusión general a partir de un único caso sin réplicas",
+      "Tendría que haber añadido perfume al abono antes de probarlo",
+      "No esperó a que fuera noche de luna llena para regar",
+      "El abono solo funciona si se aplica con una jeringuilla de plástico"
+    ],
+    "correcta": 0,
+    "explicacion": "Una sola planta pudo marchitarse por una infección de hongos en la raíz, un gusano o un defecto genético. En ciencia se necesitan réplicas y muestras representativas (decenas o cientos de ejemplares) para tener validez estadística."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "Si tras semanas de experimentos rigurosos descubres que los resultados contradicen por completo tu hipótesis inicial, ¿qué debes hacer?",
+    "opciones": [
+      "Aceptar los datos con honestidad, descartar la hipótesis y formular una nueva hipótesis con lo aprendido",
+      "Manipular las cifras del cuaderno para que coincidan con lo que pensabas",
+      "Repetir las mediciones inventándote números hasta que salga lo que querías",
+      "Romper el informe y hacer como si nunca hubieras hecho el experimento"
+    ],
+    "correcta": 0,
+    "explicacion": "En la ciencia no existen 'fracasos': descubrir que una hipótesis era falsa es un gran avance porque descarta caminos erróneos y enseña la realidad. La honestidad al registrar los datos es la norma ética fundamental."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "Reto del olivar: Un agricultor observa que las semillas plantadas cerca de la orilla del río nacen en 4 días, mientras que en la ladera alta tardan 12 días o mueren. ¿Cuál es la hipótesis más sólida para contrastar primero?",
+    "opciones": [
+      "La mayor disponibilidad de humedad en el suelo de la ribera acelera el proceso de germinación del embrión",
+      "Las semillas de la ladera alta duermen más horas porque hace más fresco",
+      "El sonido del agua del río estimula psicológicamente a las aceitunas",
+      "Las plantas de la ladera se niegan a crecer porque tienen miedo a la altura"
+    ],
+    "correcta": 0,
+    "explicacion": "Una hipótesis científica debe basarse en leyes naturales y variables físicas medibles. El agua es indispensable para ablandar la cubierta dura de la semilla (endocarpo) y activar las enzimas metabólicas de la germinación."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "¿Cuál de los siguientes datos anotados en un cuaderno de ciencias es estrictamente CUANTITATIVO?",
+    "opciones": [
+      "'La raíz principal de la muestra alcanzó una longitud de 6,4 cm al quinto día'",
+      "'Las hojas presentan un aspecto marchito y un color algo apagado'",
+      "'El olor desprendido por la muestra es ligeramente ácido y penetrante'",
+      "'La superficie del tallo parece bastante suave al tacto'"
+    ],
+    "correcta": 0,
+    "explicacion": "Los datos cuantitativos se expresan mediante números y unidades de medida concretas (como 6,4 cm, 12 gramos o 23 °C), lo que permite representarlos en tablas y analizarlos con matemáticas y gráficas."
+  },
+  {
+    "tema": "El método científico",
+    "pregunta": "¿Por qué los científicos redactan artículos detallando el procedimiento experimental paso a paso al comunicar sus descubrimientos?",
+    "opciones": [
+      "Para que otros investigadores puedan reproducir exactamente el experimento y validar los resultados",
+      "Para que el artículo tenga muchas páginas y sea más caro de comprar",
+      "Para presumir de que disponen de más instrumental que los demás",
+      "Porque es una norma estética sin ninguna utilidad práctica"
+    ],
+    "correcta": 0,
+    "explicacion": "La comunicación transparente del método permite el escrutinio público de la ciencia. Si un protocolo no se detalla, nadie puede comprobarlo ni verificar si hubo errores, impidiendo que la ciencia avance de forma fiable."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "¿Cuál es la característica primordial que debe tener el lenguaje utilizado en la ciencia?",
+    "opciones": [
+      "Ser objetivo, preciso, claro y sin ambigüedades subjetivas",
+      "Ser misterioso y complejo para que solo unos pocos elegidos lo comprendan",
+      "Usar muchas metáforas poéticas y relatos fantásticos",
+      "Incluir opiniones emocionales y adjetivos exagerados"
+    ],
+    "correcta": 0,
+    "explicacion": "El lenguaje científico huye de la vaguedad. Cada concepto se define de forma estricta para que un científico de Japón, España o Sudáfrica entienda con absoluta exactitud de qué fenómeno se está hablando."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "En el Sistema Internacional de Unidades (SI), ¿cuál es la unidad básica oficial de MASA?",
+    "opciones": [
+      "El kilogramo (kg)",
+      "El gramo (g)",
+      "La libra (lb)",
+      "La tonelada (t)"
+    ],
+    "correcta": 0,
+    "explicacion": "Aunque en el laboratorio de aula usemos gramos por comodidad con cantidades pequeñas, la unidad fundamental de masa definida en el Sistema Internacional es el kilogramo (kg)."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "En el Sistema Internacional de Unidades (SI), ¿cuál es la unidad básica oficial de LONGITUD?",
+    "opciones": [
+      "El metro (m)",
+      "El centímetro (cm)",
+      "El milímetro (mm)",
+      "El kilómetro (km)"
+    ],
+    "correcta": 0,
+    "explicacion": "La unidad básica oficial de longitud en el Sistema Internacional es el metro (m). A partir de él se obtienen múltiplos (como el kilómetro, 1.000 m) y submúltiplos (como el milímetro o el micrómetro)."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "Según la nomenclatura binomial estandarizada de Carlos Linneo, ¿cómo debe escribirse correctamente el nombre científico del lobo?",
+    "opciones": [
+      "*Canis lupus* (con el género en mayúscula, la especie en minúscula y en cursiva)",
+      "CANIS LUPUS (todo en mayúsculas y entre paréntesis)",
+      "canis Lupus (con el género en minúscula y la especie en mayúscula)",
+      "Canis Lupus (ambas palabras en mayúscula y con subrayado doble)"
+    ],
+    "correcta": 0,
+    "explicacion": "El sistema binomial utiliza el latín: la primera palabra designa el Género (con mayúscula inicial) y la segunda el epíteto específico (en minúscula). Ambas se escriben en cursiva (o subrayadas si se escribe a mano)."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "En la ciencia rigurosa, ¿qué diferencia existe entre una hipótesis y una TEORÍA científica?",
+    "opciones": [
+      "Una hipótesis es una respuesta provisional a comprobar; una teoría es un cuerpo amplio de conocimientos respaldado por abundantes pruebas",
+      "Una teoría es una simple duda pasajera de un profesor en el pasillo",
+      "Una hipótesis es una ley matemática que nunca falla, mientras la teoría es un cuento",
+      "No existe ninguna diferencia; son dos palabras exactamente sinónimas"
+    ],
+    "correcta": 0,
+    "explicacion": "En la calle decimos 'tengo una teoría' cuando sospechamos algo sin pruebas. Pero en ciencia, una Teoría (como la Teoría Celular o la Tectónica de Placas) es la máxima categoría explicativa respaldada por infinidad de evidencias y experimentos."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "¿Cuál de los siguientes enunciados cumple los requisitos de rigor y precisión del lenguaje científico?",
+    "opciones": [
+      "\"La solución acuosa a 22 °C redujo la población bacteriana en un 38% tras 4 horas de exposición\"",
+      "\"¡Una pócima milagrosa destruyó a los bichitos malos en un santiamén!\"",
+      "\"El líquido mágico limpió todo estupendamente y las plantas quedaron felices\"",
+      "\"A mí me da la sensación de que el producto tiene una vibra muy potente contra las bacterias\""
+    ],
+    "correcta": 0,
+    "explicacion": "El lenguaje científico especifica magnitudes cuantitativas (temperatura en °C, porcentaje de reducción y tiempo en horas), evitando adjetivos emocionales o juicios de valor subjetivos."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "Si queremos graficar cómo desciende la temperatura del agua de un vaso minuto a minuto al enfriarse, ¿qué tipo de gráfica es la más adecuada?",
+    "opciones": [
+      "Un gráfico lineal de evolución temporal (tiempo en eje X, temperatura en eje Y)",
+      "Un diagrama de sectores circulares (gráfico de tarta)",
+      "Un pictograma con dibujos de cubitos de hielo",
+      "Una pirámide de franjas de edad tridimensional"
+    ],
+    "correcta": 0,
+    "explicacion": "Las gráficas de líneas cartesianas (eje X e Y) son idóneas para representar variables continuas en el tiempo. Permiten ver con claridad la pendiente, la velocidad de enfriamiento y la temperatura ambiente final."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "Si realizamos un inventario de árboles en el patio del instituto y queremos comparar cuántos pinos, cipreses y naranjos hay, ¿qué gráfica utilizaremos?",
+    "opciones": [
+      "Un diagrama de barras donde cada barra represente una especie diferente",
+      "Una curva de dispersión logarítmica sin etiquetas",
+      "Una gráfica de ondas sinusoidales",
+      "Un mapa de relieve submarino"
+    ],
+    "correcta": 0,
+    "explicacion": "El diagrama de barras es perfecto para variables cualitativas o discretas (las especies de árboles). La altura de cada barra muestra de un vistazo la frecuencia o cantidad de individuos de cada grupo."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "En las unidades métricas, ¿a qué fracción corresponde el prefijo 'micro-' (símbolo µ), como en 'micrómetro'?",
+    "opciones": [
+      "A una millonésima parte de la unidad (dividido entre 1.000.000)",
+      "A una centésima parte de la unidad (dividido entre 100)",
+      "A mil veces la unidad multiplicada",
+      "A la mitad exacta de un milímetro"
+    ],
+    "correcta": 0,
+    "explicacion": "El prefijo micro- equivale a $10^{-6}$ (una millonésima parte). Un micrómetro (µm) es la milésima parte de un milímetro, la escala en la que se miden la mayoría de las células de nuestro cuerpo."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "¿Qué significa el término científico de origen latino 'in vitro'?",
+    "opciones": [
+      "Que el ensayo o proceso se realiza en material de laboratorio (tubos de ensayo, placas) fuera del organismo vivo",
+      "Que el experimento se realiza al aire libre en un día muy soleado",
+      "Que la investigación se lleva a cabo dentro de un bosque protegido",
+      "Que las conclusiones del estudio se han publicado en internet"
+    ],
+    "correcta": 0,
+    "explicacion": "'In vitro' significa literalmente 'en el vidrio'. Se refiere a reacciones biológicas o químicas controladas en tubos o matraces de laboratorio. Cuando se realiza dentro del ser vivo completo, se denomina 'in vivo'."
+  },
+  {
+    "tema": "El lenguaje científico",
+    "pregunta": "¿Por qué la ciencia utiliza nombres científicos universales en latín para los seres vivos en lugar de usar nombres comunes populares?",
+    "opciones": [
+      "Porque los nombres comunes cambian según el país o la región, mientras que el nombre científico es único e idéntico en todo el mundo",
+      "Porque el latín es el único idioma en el que se pueden imprimir libros de texto",
+      "Porque a las plantas les resulta más fácil reconocer su especie en latín",
+      "Para que los exámenes de biología sean más largos y difíciles"
+    ],
+    "correcta": 0,
+    "explicacion": "Un mismo animal (como el 'gorrión') tiene decenas de nombres distintos en diferentes idiomas y dialectos locales, e incluso el mismo nombre popular puede referirse a especies distintas. El nombre científico latino es un código universal indiscutible."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Cómo se desarrolla mayoritariamente la actividad científica en el mundo contemporáneo?",
+    "opciones": [
+      "En equipos multidisciplinares de investigadoras e investigadores que cooperan y comparten datos globalmente",
+      "Mediante científicos aislados que trabajan en sótanos secretos sin hablar con nadie",
+      "Por magos individuales que guardan bajo llave fórmulas misteriosas",
+      "A través de personas que deciden la ciencia sin consultar ningún dato ni experimento"
+    ],
+    "correcta": 0,
+    "explicacion": "La ciencia moderna es una labor colectiva e interdisciplinar. Biólogos, químicos, matemáticos, ingenieros y técnicos colaboran en consorcios internacionales para resolver problemas complejos como enfermedades o el cambio climático."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Qué es la 'revisión por pares' (*peer review*) que debe superar un artículo antes de publicarse en una revista científica de prestigio?",
+    "opciones": [
+      "La evaluación crítica y anónima del estudio por parte de otros científicos expertos en esa misma especialidad",
+      "Comprobar que el número total de páginas del informe sea un número par",
+      "Una votación popular en redes sociales para ver qué foto tiene más éxito",
+      "La revisión ortográfica que realizan los familiares del autor del experimento"
+    ],
+    "correcta": 0,
+    "explicacion": "La revisión por pares es el control de calidad de la ciencia. Expertos externos analizan minuciosamente si el método fue riguroso, si los cálculos son correctos y si las conclusiones se derivan lógicamente de los datos antes de permitir su publicación."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "En un laboratorio encuentras un envase con el pictograma de peligro que muestra una CALAVERA SOBRE DOS TIBIAS. ¿Qué riesgo indica?",
+    "opciones": [
+      "Toxicidad aguda: sustancia venenosa mortal o extremadamente nociva al contacto, inhalación o ingestión",
+      "Producto fabricado especialmente para adornar disfraces",
+      "Alimento energético recomendado para reponer fuerzas en la pausa",
+      "Líquido refrescante inocuo con aroma a frutas"
+    ],
+    "correcta": 0,
+    "explicacion": "Este pictograma advierte de un veneno químico letal o de alta gravedad, incluso en cantidades minúsculas. Exige uso estricto de campana de extracción de gases, bata, guantes y manipulación exclusiva por el profesorado."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Qué peligro nos advierte el pictograma de seguridad de una LLAMA sobre una barra horizontal?",
+    "opciones": [
+      "Sustancia inflamable: puede arder con extrema facilidad si entra en contacto con calor, chispas o llamas abiertas",
+      "Sustancia que enfría rápidamente cualquier recipiente hasta congelarlo",
+      "Producto seguro para encender barbacoas dentro del laboratorio",
+      "Sustancia que emite luz fluorescente en la oscuridad de forma natural"
+    ],
+    "correcta": 0,
+    "explicacion": "Indica sustancias con bajo punto de ignición (alcoholes, éter, acetona). Deben mantenerse completamente alejadas de fuentes de calor, radiadores y mecheros Bunsen para evitar incendios."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "El pictograma de peligro que representa dos tubos vertiendo líquido que corroe una barra de metal y una mano humana indica...",
+    "opciones": [
+      "Sustancia corrosiva: ataca químicamente los metales y produce graves quemaduras destructivas en la piel y ojos",
+      "Jabón líquido desinfectante para lavarse las manos tras la clase",
+      "Esmalte protector para evitar la oxidación de los grifos",
+      "Sustancia explosiva que detona al agitar el recipiente"
+    ],
+    "correcta": 0,
+    "explicacion": "Los ácidos concentrados (sulfúrico, clorhídrico) y las bases fuertes (sosa cáustica) llevan esta señal. Destruyen los tejidos vivos al contacto y requieren protección ocular y guantes de nitrilo."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Qué protocolo de seguridad debes seguir si se te resbala y rompe un vaso de precipitados de cristal en el laboratorio escolar?",
+    "opciones": [
+      "Avisar inmediatamente al docente, no tocar los fragmentos con los dedos y recogerlos con cepillo y recogedor",
+      "Ocultar los pedazos en la papelera con la mano antes de que nadie se entere",
+      "Intentar unir los trozos afilados rápidamente con pegamento escolar",
+      "Seguir trabajando pisando los cristales con cuidado"
+    ],
+    "correcta": 0,
+    "explicacion": "Ante cualquier incidente con vidrio roto en el aula de ciencias, se avisa al profesor de inmediato. Nunca se tocan las astillas con las manos para evitar cortes y posible intoxicación con residuos químicos adheridos."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Por qué está tajantemente prohibido comer bocadillos, beber agua o mascar chicle en un laboratorio de ciencias?",
+    "opciones": [
+      "Porque los alimentos pueden absorber vapores tóxicos o contaminarse con reactivos peligrosos presentes en el ambiente o mesas",
+      "Porque los restos de comida apagan la llama del mechero Bunsen",
+      "Porque los microscopios se descalibran si perciben olor a comida",
+      "Únicamente por una cuestión de modales y buena educación formal"
+    ],
+    "correcta": 0,
+    "explicacion": "En el laboratorio flotan micropartículas y vapores químicos, y en las superficies puede haber restos microscópicos de reactivos. Al comer o beber nos exponemos a ingerir venenos o patógenos bacterianos sin darnos cuenta."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Qué instrumento de vidrio cilíndrico con pie y marcas graduadas se utiliza para medir volúmenes de líquidos con bastante precisión?",
+    "opciones": [
+      "La probeta graduada",
+      "El mortero con maza",
+      "La placa de Petri",
+      "El tubo de ensayo sin graduar"
+    ],
+    "correcta": 0,
+    "explicacion": "La probeta graduada está diseñada para medir volúmenes líquidos con exactitud mirando el menisco a la altura de los ojos. Los vasos de precipitados o matraces Erlenmeyer tienen marcas solo aproximadas."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "¿Para qué se utiliza habitualmente una 'placa de Petri' en el laboratorio de Biología?",
+    "opciones": [
+      "Para depositar un gel nutritivo (como agar) y sembrar cultivos de bacterias u hongos microscópicos",
+      "Para calentar sustancias químicas a más de quinientos grados centígrados",
+      "Para triturar piedras duras hasta pulverizarlas por completo",
+      "Para atrapar mariposas y pájaros en las salidas de campo"
+    ],
+    "correcta": 0,
+    "explicacion": "La placa de Petri (un platillo circular de vidrio o plástico con tapa) proporciona una superficie estéril y protegida para estudiar colonias bacterianas, germinación de semillas o pequeños invertebrados."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "En un microscopio óptico, ¿cuál es la función específica del 'tornillo micrométrico'?",
+    "opciones": [
+      "Realizar un desplazamiento diminuto de la platina para lograr un enfoque nítido y preciso de la muestra",
+      "Mover la platina a gran velocidad hacia arriba y hacia abajo para localizar el cristal",
+      "Encender y apagar el espejo reflector de luz solar",
+      "Sujetar la funda de plástico protectora del microscopio"
+    ],
+    "correcta": 0,
+    "explicacion": "El tornillo macrométrico hace el enfoque inicial grueso moviendo la platina con rapidez; luego se usa siempre el tornillo micrométrico, que permite afinar el foco a nivel micrométrico para ver los orgánulos con máxima nitidez."
+  },
+  {
+    "tema": "El trabajo científico",
+    "pregunta": "En la mesa del laboratorio escolar hay un frasco sin etiqueta con un líquido transparente. ¿Qué acción NUNCA se debe realizar bajo ningún concepto?",
+    "opciones": [
+      "Oler directamente el recipiente o probar el líquido con la punta de la lengua para averiguar qué es",
+      "Avisar al profesor/a para identificarlo y gestionarlo según el protocolo seguro",
+      "Tratar el frasco con extrema cautela considerándolo un residuo potencialmente peligroso",
+      "Comprobar el inventario de sustancias químicas del departamento"
+    ],
+    "correcta": 0,
+    "explicacion": "Nunca se debe oler directamente ni mucho menos probar ninguna sustancia en el laboratorio. Muchos ácidos inodoros o disolventes volátiles pueden causar quemaduras pulmonares graves o envenenamiento instantáneo."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿Cuál es la primera medida sensata que debemos tomar ante un mensaje de WhatsApp que anuncia un supuesto 'descubrimiento médico milagroso'?",
+    "opciones": [
+      "Buscar si fuentes científicas oficiales (ministerios de salud, CSIC, universidades reconocidas) avalan la noticia",
+      "Reenviarlo de inmediato a todos los grupos de amigos y familiares para advertirles",
+      "Creerlo ciegamente si el texto está escrito en mayúsculas y con muchos signos de exclamación",
+      "Comprobar si el mensaje tiene emojis muy llamativos y coloridos"
+    ],
+    "correcta": 0,
+    "explicacion": "Verificar la fuente de información es la regla básica del pensamiento crítico. Las noticias falsas buscan propagarse rápidamente explotando la alarma y el asombro; contrastar en portales oficiales frena los bulos."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿Cuál de las siguientes es una señal típica de sospecha de que un titular científico es un BULO o noticia falsa?",
+    "opciones": [
+      "Utiliza titulares alarmistas como '¡Lo que las farmacéuticas te ocultan!' y no cita autores ni enlaces a estudios reales",
+      "Explica de forma prudente las limitaciones y dudas que todavía tiene el experimento",
+      "Menciona los nombres completos de los científicos y la universidad donde trabajan",
+      "Presenta datos numéricos con sus correspondientes unidades de medida"
+    ],
+    "correcta": 0,
+    "explicacion": "Los bulos se disfrazan de teorías de la conspiración ('el secreto oculto'), carecen de firmas de investigadores acreditados y no aportan enlaces a revistas científicas revisadas por expertos."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "Se observa que en verano suben las ventas de bañadores y también aumentan las picaduras de avispa. Decir que 'llevar bañador atrae mágicamente a las avispas' es falso porque...",
+    "opciones": [
+      "Correlación no implica causalidad: ambos fenómenos coinciden por una causa común externa (el calor del verano)",
+      "Las avispas son daltónicas y no distinguen los bañadores de colores",
+      "Los bañadores están hechos con repelente químico de insectos obligatorio",
+      "En verano las avispas duermen durante todo el día"
+    ],
+    "correcta": 0,
+    "explicacion": "En ciencia, que dos hechos ocurran a la vez (correlación) no significa que uno provoque el otro (causalidad). Ambas cosas suben en julio y agosto simplemente porque hace calor y la gente pasa más tiempo al aire libre."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿En qué consiste el 'sesgo de confirmación', un truco psicológico que nos hace vulnerables a los bulos en redes sociales?",
+    "opciones": [
+      "En aceptar sin dudar cualquier información que coincida con lo que ya pensábamos y rechazar las pruebas que nos contradicen",
+      "En confirmar dos veces la contraseña de acceso al correo electrónico",
+      "En la confirmación oficial que envían las universidades tras graduarse",
+      "En un problema de visión que distorsiona las letras en las pantallas de los teléfonos"
+    ],
+    "correcta": 0,
+    "explicacion": "El sesgo de confirmación nos hace buscar y creer datos que nos den la razón, mientras ignoramos o descalificamos las evidencias contrarias. Ser buen científico exige poner a prueba también nuestras propias convicciones."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿Cuál es el grave peligro de los bulos que recomiendan remedios caseros 'mágicos' en internet para curar enfermedades graves?",
+    "opciones": [
+      "Que los enfermos abandonen o retrasen los tratamientos médicos científicamente demostrados, poniendo en riesgo su vida",
+      "Que las tiendas de plantas medicinales se queden sin existencias de manzanilla",
+      "Que los médicos tengan menos trabajo en los centros de salud",
+      "Ninguno, porque los consejos de internet siempre son beneficiosos para la salud"
+    ],
+    "correcta": 0,
+    "explicacion": "El auténtico peligro de la pseudociencia médica no es solo que no funcione, sino que reemplaza a la medicina real. Retrasar una intervención médica necesaria puede tener consecuencias fatales irreversibles."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "Encuentras en TikTok una foto impresionante de un supuesto 'tiburón de dos cabezas con alas'. ¿Qué herramienta digital te ayuda a descubrir si es un montaje?",
+    "opciones": [
+      "La búsqueda inversa de imágenes (Google Imágenes o TinEye) para localizar el origen original del archivo",
+      "La aplicación de la linterna del teléfono móvil",
+      "Un software para editar filtros de audio",
+      "Una hoja de cálculo para sumar columnas de números"
+    ],
+    "correcta": 0,
+    "explicacion": "La búsqueda inversa de imágenes rastrea la fotografía por toda la web. Permite descubrir si la imagen fue generada con inteligencia artificial, modificada con Photoshop o sacada de una película de ficción."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿Qué es la 'falacia de autoridad' comúnmente utilizada en la publicidad engañosa y en las redes?",
+    "opciones": [
+      "Pretender que una afirmación científica es verdadera únicamente porque la apoya un actor famoso, deportista o 'influencer'",
+      "El poder que tiene un profesor para calificar las tareas escolares",
+      "La ley que obliga a registrar los barcos pesqueros en el puerto",
+      "El derecho de un policía de tráfico a detener un coche"
+    ],
+    "correcta": 0,
+    "explicacion": "Tener millones de seguidores en redes sociales o ganar medallas de oro no convierte a nadie en experto en genética o inmunología. La validez de un hecho depende de las pruebas científicas, no de la popularidad de quien habla."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "Un vídeo viral afirma: 'Poner rodajas de patata cruda en la planta de los pies absorbe todas las toxinas porque al amanecer están negras'. ¿Por qué se oscurecen en realidad?",
+    "opciones": [
+      "Por la oxidación química natural del almidón y enzimas de la patata al reaccionar con el oxígeno del aire",
+      "Porque las toxinas de la sangre bajan de noche hacia los dedos de los pies",
+      "Porque la patata absorbe el color de los calcetines oscuros por magnetismo",
+      "Porque las bacterias buenas comen patata y dejan ceniza"
+    ],
+    "correcta": 0,
+    "explicacion": "Al igual que una manzana cortada se vuelve marrón en el frutero, las enzimas polifenol oxidasas de la patata reaccionan con el oxígeno del aire oxidándose. No tiene nada que ver con supuestas toxinas del cuerpo humano."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "¿Cuál es la función de los equipos de verificación de hechos o 'fact-checkers' como Maldita Ciencia o Newtral?",
+    "opciones": [
+      "Rastrear bulos virales y contrastar la información con expertos científicos y fuentes primarias para desmentir falsedades",
+      "Cobrar multas de dinero a quienes comparten memes divertidos",
+      "Borrar las cuentas de redes sociales de los alumnos que suspenden",
+      "Crear noticias misteriosas para que la gente lea más periódicos"
+    ],
+    "correcta": 0,
+    "explicacion": "El periodismo de datos y verificación analiza las cadenas sospechosas que circulan en internet, contacta con investigadores de renombre y publica artículos explicativos con pruebas sólidas para desmontar los bulos."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "Mito popular desmentido: 'Si tocas a un polluelo caído de un árbol, sus padres lo rechazarán porque olerá a humano'. ¿Qué ha demostrado la ornitología?",
+    "opciones": [
+      "Es falso: la inmensa mayoría de las aves tienen un sentido del olfato casi inapreciable y no abandonan a sus crías por ese motivo",
+      "Es totalmente cierto: las palomas huelen a un humano a más de tres kilómetros",
+      "Solo es cierto si el polluelo es de color amarillo claro",
+      "Las aves reconocen a sus crías únicamente pesándolas con una báscula"
+    ],
+    "correcta": 0,
+    "explicacion": "Las aves casi no tienen receptores olfativos desarrollados y se guían por la vista y las llamadas sonoras de los polluelos. Si encuentras un polluelo volantón en peligro en el suelo, lo correcto es colocarlo en una rama alta y segura cercana para que sus padres sigan alimentándolo."
+  },
+  {
+    "tema": "Aprendemos a detectar bulos",
+    "pregunta": "Un titular llamativo afirma: '¡Científicos descubren que el extracto de diente de león elimina el cáncer en 48 horas!'. Al leer la letra pequeña se ve que fue un ensayo en placas de plástico con células aisladas. ¿Qué truco engañoso se usó?",
+    "opciones": [
+      "Exagerar un resultado preliminar de laboratorio in vitro como si fuera una cura médica comprobada en personas vivas",
+      "El diente de león no existe en la naturaleza, es una planta inventada",
+      "El experimento se hizo en un día de lluvia, lo cual invalida los resultados",
+      "Ocultar que el cáncer se cura simplemente haciendo deporte diez minutos al día"
+    ],
+    "correcta": 0,
+    "explicacion": "Destruir células cancerosas en una placa Petri con una sustancia tóxica es fácil (incluso el jabón o la lejía las matarían), pero dentro de un cuerpo humano el fármaco debe viajar por la sangre, no dañar los órganos sanos y superar ensayos clínicos durante años. Los titulares sensacionalistas saltan de la placa Petri a la cura definitiva engañando a los lectores."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En la mítica película 'Jurassic Park', los científicos resucitan dinosaurios a partir de sangre extraída de un mosquito fosilizado en ámbar. ¿Por qué es biológicamente imposible hoy?",
+    "opciones": [
+      "La molécula de ADN se descompone y fragmenta por completo con el paso del tiempo; no puede conservarse intacta tras 66 millones de años",
+      "Porque los mosquitos de la era mesozoica eran vegetarianos y no picaban a los dinosaurios",
+      "Porque el ámbar es un metal sintético que destruye cualquier material orgánico",
+      "Porque las células de dinosaurio eran tan grandes que no cabían dentro de una probeta"
+    ],
+    "correcta": 0,
+    "explicacion": "Estudios bioquímicos demuestran que el ADN tiene una vida media de unos 521 años. Tras unos 6,8 millones de años no queda ni un solo enlace legible. Como los dinosaurios no aviares se extinguieron hace 66 millones de años, su ADN está irremediablemente degradado."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En las batallas espaciales de 'Star Wars', cuando estalla una nave enemiga se escucha un ensordecedor rugido. ¿Qué principio de la física demuestra que esto es una licencia de ficción?",
+    "opciones": [
+      "El sonido es una onda mecánica que necesita materia (aire u otro gas) para propagarse; en el vacío espacial reina el silencio absoluto",
+      "Porque en el espacio exterior la luz viaja mucho más lenta que el sonido",
+      "Porque las naves espaciales llevan silenciadores incorporados en el motor",
+      "Porque el sonido solo existe cuando una persona tiene puesto un casco con radio"
+    ],
+    "correcta": 0,
+    "explicacion": "El sonido requiere partículas que choquen entre sí para transmitir la vibración acústica. En el espacio casi vacío interplanetario no hay atmósfera, por lo que ninguna explosión produce ruido audible desde fuera."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En cómics y películas como las de 'Hulk' o 'Spider-Man', la radiación gamma extrema o mordeduras radiactivas otorgan superpoderes. ¿Qué le ocurre en realidad a un organismo ante una radiación ionizante letal?",
+    "opciones": [
+      "La radiación rompe los enlaces moleculares y desgarra el ADN, causando daño tisular grave, envenenamiento celular o muerte",
+      "Multiplica de forma segura el número de fibras musculares por diez mil",
+      "Permite a los seres humanos respirar bajo el agua y trepar paredes",
+      "Convierte los huesos en una aleación de titanio impenetrable"
+    ],
+    "correcta": 0,
+    "explicacion": "La radiación ionizante de alta energía destruye las estructuras celulares y corrompe el código genético. En la realidad clínica produce quemaduras internas, fallo orgánico y cáncer, jamás habilidades sobrehumanas."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En las adaptaciones de 'Viaje al centro de la Tierra', los protagonistas descubren a 3.000 km de profundidad océanos subterráneos iluminados y dinosaurios vivos. ¿Cómo es el interior terrestre en la realidad?",
+    "opciones": [
+      "Rocas sólidas y plásticas a presiones aplastantes en el manto y un núcleo metálico a más de 5.000 °C",
+      "Una gigantesca burbuja de aire limpio donde flotan nubes blancas",
+      "Un océano de agua helada a doscientos grados bajo cero",
+      "Una cueva vacía iluminada por cristales mágicos con gravedad cero"
+    ],
+    "correcta": 0,
+    "explicacion": "La geosfera interior está sometida a temperaturas y presiones sobrecogedoras por el peso de las capas superiores (gradiente geotérmico). A 3.000 km de profundidad nos encontramos con el núcleo externo de hierro y níquel fundido a temperaturas similares a la superficie del Sol."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En la película de catástrofes 'San Andrés', un megaterremoto abre una grieta gigantesca que separa California y crea un abismo en la tierra. ¿Por qué la falla de San Andrés no puede abrirse así?",
+    "opciones": [
+      "Es una falla transformante: las placas tectónicas se deslizan horizontalmente una rozando con la otra, no se separan hacia los lados",
+      "Porque el suelo de California está hecho de rocas elásticas que nunca se rompen",
+      "Porque los terremotos en tierra firme solo duran exactamente dos segundos",
+      "Porque los bomberos inyectaron cemento en toda la longitud de la falla"
+    ],
+    "correcta": 0,
+    "explicacion": "La placa del Pacífico y la placa Norteamericana tienen un movimiento de desgarre lateral (horizontal). La fricción acumula energía que produce temblores muy destructivos, pero nunca una fosa que se abra y se trague un estado."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En 'The Martian' (Marte), el astronauta Mark Watney sobrevive cultivando patatas en el regolito marciano. ¿Qué dificultad química real tiene el suelo de Marte que la ciencia investiga cómo resolver?",
+    "opciones": [
+      "Contiene percloratos (sales muy tóxicas para la vida) y carece de materia orgánica y bacterias del suelo",
+      "Está compuesto exclusivamente de sal marina cristalizada que deshidrata las plantas",
+      "En Marte no hay gravedad y las patatas saldrían flotando hacia el techo",
+      "El suelo marciano está ardiendo continuamente a 400 grados centígrados"
+    ],
+    "correcta": 0,
+    "explicacion": "El polvo de Marte posee percloratos oxidantes dañinos para las células y carece de microbioma y humus fértil. Para cultivar en futuras bases marcianas habrá que lavar químicamente el suelo y sembrarle microorganismos terrestres simbióticos."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En películas de animación como 'Ice Age' o en los dibujos de 'Los Picapiedra', es habitual ver a humanos primitivos o mamuts conviviendo con dinosaurios como el T-Rex. ¿Cuál es el gran error cronológico?",
+    "opciones": [
+      "Los dinosaurios no aviares se extinguieron 66 millones de años antes de que aparecieran los primeros ancestros humanos",
+      "Los dinosaurios vivieron en la Edad de Hielo pero eran animales acuáticos",
+      "Los mamuts se extinguieron mucho antes de que surgiera el primer dinosaurio",
+      "Los dinosaurios y humanos sí convivieron, pero los mamuts eran aves voladoras"
+    ],
+    "correcta": 0,
+    "explicacion": "Existe una inmensa brecha de más de 60 millones de años entre el fin de los grandes dinosaurios en el Cretácico y la era glacial del Cuaternario, donde convivieron mamuts lanudos, tigres dientes de sable y nuestros antepasados del género Homo."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En clásicos de ciencia ficción como 'El ataque de la hormiga gigante', insectos diminutos aumentan hasta medir 20 metros de largo. ¿Qué ley biológica y física impide que existan insectos gigantes hoy?",
+    "opciones": [
+      "La ley del cuadrado-cubo: su peso aumentaría mucho más que la fuerza de sus patas y sus tráqueas respiratorias no podrían oxigenar un cuerpo gigante",
+      "Que no habría suficientes hojas de lechuga en el campo para alimentarlas",
+      "Que los insectos tienen miedo a las alturas y no les gusta ser grandes",
+      "Que la atmósfera terrestre está hecha de un gas que disuelve los exoesqueletos gigantes"
+    ],
+    "correcta": 0,
+    "explicacion": "Al duplicar el tamaño, el volumen y peso se multiplican por 8 mientras que la sección de las patas solo por 4; una hormiga de 20 metros colapsaría aplastada por su propio peso. Además, los insectos no tienen pulmones y respiran por difusión pasiva mediante tubos traqueales, eficaz solo en tamaños milimétricos o centimétricos."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "Películas de terror como 'Tiburón' o 'Megalodón' retratan a los escualos como cazadores obsesionados con devorar bañistas. ¿Qué daño ecológico real ha provocado esta imagen?",
+    "opciones": [
+      "Ha justificado el miedo irracional y la matanza masiva de millones de tiburones al año, vitales para el equilibrio de los mares",
+      "Ha hecho que los peces pequeños se queden sin amigos en el fondo del mar",
+      "Ha provocado que los tiburones decidan mudarse a vivir en los ríos de agua dulce",
+      "Ninguno, porque los tiburones son capaces de ver las películas y defenderse con abogados"
+    ],
+    "correcta": 0,
+    "explicacion": "Los tiburones son depredadores cumbre indispensables que eliminan peces enfermos y mantienen sanos los ecosistemas marinos. Los ataques humanos son accidentes extraordinariamente raros provocados por confusión con focas; sin embargo, la fobia cinematográfica ha tolerado su sobrepesca crítica."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "El terrorífico extraterrestre de 'Alien' deposita sus embriones dentro de un huésped vivo para alimentarse de él y salir al exterior. ¿En qué criatura real de la naturaleza se inspiró este mecanismo?",
+    "opciones": [
+      "En las avispas parasitoides (como la avispa esmeralda), cuyas larvas devoran orugas o cucarachas vivas por dentro antes de emerger",
+      "En las lombrices de tierra que cavan túneles bajo el césped de los jardines",
+      "En las esponjas marinas que filtran agua en los arrecifes de coral",
+      "En los delfines que saltan olas en parejas durante el atardecer"
+    ],
+    "correcta": 0,
+    "explicacion": "La naturaleza supera a la ficción: miles de especies de avispas parasitoides inoculan veneno paralizante en un insecto, introducen su huevo en el interior y la larva se come los tejidos del huésped con precisión quirúrgica evitando órganos vitales hasta que completa su metamorfosis."
+  },
+  {
+    "tema": "ByG en el cine",
+    "pregunta": "En las películas espaciales los astronautas flotan en el interior de la Estación Espacial Internacional (ISS). ¿Por qué experimentan ingravidez realmente?",
+    "opciones": [
+      "Porque la estación y los astronautas están en continua caída libre orbital alrededor de la Tierra (la gravedad allí es casi el 90%)",
+      "Porque a esa altitud la gravedad de la Tierra desaparece instantáneamente al 100%",
+      "Porque llenan las habitaciones con gas helio para que los tripulantes no toquen el suelo",
+      "Porque los trajes espaciales tienen imanes que repelen la chapa de aluminio del suelo"
+    ],
+    "correcta": 0,
+    "explicacion": "A 400 km de altitud la gravedad de la Tierra sigue atrayendo con cerca del 90% de su intensidad. La razón de que floten es que la ISS viaja a unos 28.000 km/h: la nave cae hacia el suelo con la misma rapidez que la curvatura de la Tierra se aleja bajo ella, generando una caída libre perpetua."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Quién es Miguel Delgado Baquerizo en el panorama científico contemporáneo?",
+    "opciones": [
+      "Un destacado ecólogo e investigador del CSIC en Sevilla, líder internacional en el estudio del microbioma y salud de los suelos",
+      "Un astronauta andaluz que comanda la base lunar de la Agencia Espacial Europea",
+      "Un arqueólogo conocido por desenterrar sarcófagos en el Valle de los Reyes",
+      "Un matemático creador de algoritmos de ajedrez para computadoras cuánticas"
+    ],
+    "correcta": 0,
+    "explicacion": "Miguel Delgado Baquerizo lidera el Laboratorio de Biodiversidad y Funcionamiento Ecosistémico (BioFunLab) en el IRNAS-CSIC. Figura de forma recurrente entre los científicos más citados e influyentes del mundo por sus estudios globales del suelo."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "Desde el punto de vista de las Ciencias Naturales, ¿por qué es un gravísimo error considerar el suelo como una simple mezcla inerte de piedras y polvo?",
+    "opciones": [
+      "Porque el suelo es un ecosistema vivo repleto de biodiversidad: un solo gramo puede albergar miles de millones de microorganismos",
+      "Porque el suelo está fabricado con plásticos reciclados que se mueven solos",
+      "Porque el suelo decide voluntariamente cuándo brotan las margaritas en primavera",
+      "Porque debajo del suelo solo hay tuberías de metal y cables subterráneos de telefonía"
+    ],
+    "correcta": 0,
+    "explicacion": "El suelo es uno de los hábitats con mayor diversidad biológica de la biosfera. En una cucharada de tierra fértil conviven miles de millones de bacterias, hongos microscópicos, protozoos, nemátodos y pequeños artrópodos que sustentan la vida vegetal."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Qué papel trascendental desempeñan los suelos del planeta en la lucha contra el cambio climático?",
+    "opciones": [
+      "Almacenan más carbono orgánico que la atmósfera y toda la masa vegetal terrestre juntas, funcionando como un gran sumidero",
+      "Expulsan el calor del planeta disparándolo directamente hacia las estrellas",
+      "Congelan los océanos para que los osos polares tengan más icebergs",
+      "Detienen los vientos huracanados mediante campos magnéticos subterráneos"
+    ],
+    "correcta": 0,
+    "explicacion": "El suelo retiene más de 2.500 gigatoneladas de carbono en forma de humus y materia orgánica. Proteger los suelos y su microbioma evita que ese carbono se oxide y se escape a la atmósfera en forma de $CO_2$, frenando el calentamiento planetario."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Por qué los científicos afirman que el suelo fértil debe considerarse un 'RECURSO NO RENOVABLE' a escala de la vida humana?",
+    "opciones": [
+      "Porque la meteorización de las rocas y la actividad biológica tardan cientos o miles de años en formar apenas unos centímetros de suelo fértil",
+      "Porque las tiendas de jardinería tienen prohibido vender tierra a particulares",
+      "Porque el agua de la lluvia disuelve el suelo haciéndolo desaparecer para siempre",
+      "Porque los tractores agrícolas gastan todo el suelo en un solo día de siembra"
+    ],
+    "correcta": 0,
+    "explicacion": "La formación del suelo (edafogénesis) es un proceso geológico y biológico extraordinariamente lento: crear entre 1 y 2 cm de suelo fértil requiere entre 200 y 1.000 años. Destruirlo por erosión, deforestación o contaminación toma solo unos meses."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Qué labor ecológica imprescindible realizan los hongos y bacterias descomponedores que pueblan el suelo?",
+    "opciones": [
+      "Descomponen restos de materia orgánica muerta (hojas, raíces, animales), reciclando los bioelementos minerales para las plantas",
+      "Se alimentan de las raíces vivas de todos los árboles para impedir que los bosques crezcan",
+      "Fabrican oro y diamantes para enriquecer las capas del manto terrestre",
+      "Generan luz fluorescente subterránea para que las lombrices puedan ver en la oscuridad"
+    ],
+    "correcta": 0,
+    "explicacion": "Los descomponedores son los grandes recicladores de la biosfera: transforman moléculas orgánicas complejas en sales minerales solubles (nitrógeno, fósforo, potasio). Sin su incansable trabajo, los nutrientes quedarían bloqueados en cadáveres y la fotosíntesis se detendría."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "Una de las investigaciones pioneras del grupo de Delgado Baquerizo se centra en los suelos de zonas secas y desiertos. ¿Qué grave peligro amenaza a estas tierras?",
+    "opciones": [
+      "La desertificación: pérdida de biodiversidad del microbioma del suelo, pérdida de fertilidad y erosión acelerada",
+      "La transformación repentina de las dunas en junglas tropicales lluviosas",
+      "La congelación total del subsuelo por falta de calor humano",
+      "El desbordamiento ininterrumpido de ríos caudalosos en los desiertos"
+    ],
+    "correcta": 0,
+    "explicacion": "Las zonas áridas representan más del 40% de la superficie emergida del planeta. Las olas de calor y la sequía empobrecen la diversidad de bacterias y hongos del suelo, destruyendo su capacidad de retener agua y acelerando la desertificación que amenaza a millones de habitantes."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Qué revolucionario avance para la medicina humana y la salud pública mundial se obtuvo directamente de microorganismos del suelo?",
+    "opciones": [
+      "La gran mayoría de los antibióticos conocidos (como la estreptomicina o la tetraciclina) producidos por bacterias del suelo",
+      "Las tiritas de plástico transpirables para cortes superficiales",
+      "Las lentillas graduadas para corregir la miopía",
+      "Los jarabes con sabor a fresa para calmar la tos común"
+    ],
+    "correcta": 0,
+    "explicacion": "Bacterias del suelo, especialmente los actinomicetos (*Streptomyces*), fabrican de forma natural armas químicas para competir contra otros microbios subterráneos. Los investigadores aislaron estas sustancias para crear los antibióticos que han salvado innumerables vidas humanas en el último siglo."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "En las regiones áridas y esteparias se forman las llamadas 'biocostras' o costras biológicas del suelo. ¿Por qué son tan valiosas?",
+    "opciones": [
+      "Son tapices microscópicos de cianobacterias, musgos y líquenes que fijan nitrógeno y protegen el terreno contra la erosión del viento",
+      "Son restos de plástico fundido arrojados por excursiones escolares",
+      "Son costras de sal que impiden que crezca cualquier tipo de vida vegetal",
+      "Son capas de cemento colocadas por los ayuntamientos para evitar que el barro manche las botas"
+    ],
+    "correcta": 0,
+    "explicacion": "Las biocostras actúan como la 'piel protectora' de los suelos desérticos. Sus filamentos microscópicos aglutinan las partículas de arena evitando que las tormentas de viento se lleven la tierra fértil, y capturan nitrógeno de la atmósfera enriqueciendo el entorno."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Cuál de las siguientes actividades humanas es una de las causas directas de la degradación y muerte de los suelos a nivel global?",
+    "opciones": [
+      "El abuso de pesticidas sintéticos, la deforestación de bosques y la contaminación por plásticos y metales pesados",
+      "La plantación de árboles autóctonos con riego por goteo sostenible",
+      "La adición de compost orgánico vegetal a los huertos escolares",
+      "La rotación tradicional de cultivos para dejar descansar la tierra"
+    ],
+    "correcta": 0,
+    "explicacion": "La agricultura química intensiva destruye las comunidades microbianas autóctonas del suelo. Si a esto se añade la tala de árboles y la acumulación de microplásticos, la estructura del suelo colapsa y es arrastrada por las lluvias hacia el mar."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "¿Cómo contribuyen las lombrices de tierra a la fertilidad del suelo y a la labor de los microorganismos?",
+    "opciones": [
+      "Excavan túneles que airean el terreno y oxigenan las raíces, y enriquecen la tierra con un humus muy fértil procedente de sus heces",
+      "Comen rocas duras rompiéndolas con pequeños dientes afilados",
+      "Calientan el suelo con su cuerpo para que no haya heladas en invierno",
+      "Devoran las hojas de los árboles trepando por los troncos de noche"
+    ],
+    "correcta": 0,
+    "explicacion": "Las lombrices son ingenieras del suelo: sus galerías esponjan la tierra permitiendo que el agua y el aire alcancen a los microorganismos aerobios; además, digieren materia vegetal muerta expulsando un humus de lombriz cargado de nutrientes minerales asimilables."
+  },
+  {
+    "tema": "Miguel Delgado Baquerizo y la importancia del suelo",
+    "pregunta": "Gracias a las investigaciones sobre el microbioma del suelo, ¿qué alternativa sostenible se perfila para sustituir los contaminantes abonos químicos?",
+    "opciones": [
+      "El empleo de 'biofertilizantes' basados en consorcios de bacterias y hongos beneficiosos que cooperan con las raíces",
+      "Asfaltar todos los campos de cultivo y pintar el suelo de verde fosforito",
+      "Regar los huertos exclusivamente con agua destilada caliente al mediodía",
+      "Verter combustibles fósiles sobre los sembrados para aportar calor al suelo"
+    ],
+    "correcta": 0,
+    "explicacion": "Los biofertilizantes utilizan cepas seleccionadas de microorganismos del suelo (como bacterias fijadoras de nitrógeno o micorrizas). Estos microbios ayudan a la planta a nutrirse y resistir sequías de forma ecológica sin contaminar acuíferos con nitratos tóxicos."
+  }
+];
+
+// State
+let seleccionados = [];
+let gameMode = "all"; // "all", "10", "20"
+let preguntasPartida = [];
+let indiceActual = 0;
+let aciertos = 0;
+let puntosXP = 0;
+let rachaActual = 0;
+let maxRacha = 0;
+let soundEnabled = true;
+let preguntasFalladas = [];
+let respondido = false;
+
+// Audio Synthesizer (Web Audio API - 100% offline)
+let audioCtx = null;
+function getAudioContext() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) audioCtx = new AudioContext();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playSound(tipo) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+
+    if (tipo === 'correct') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.15);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.25);
+    } else if (tipo === 'wrong') {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.25);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    } else if (tipo === 'streak') {
+      const notes = [440, 554.37, 659.25];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const t = now + idx * 0.08;
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.18, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.2);
+      });
+    } else if (tipo === 'fanfare') {
+      const notes = [392, 523.25, 659.25, 783.99];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const t = now + idx * 0.12;
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.22, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.4);
+      });
+    }
+  } catch (e) {
+    // Silent fail
+  }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  localStorage.setItem('bioretos_sound', soundEnabled ? '1' : '0');
+  actualizarBotonSonido();
+}
+
+function actualizarBotonSonido() {
+  const btn = document.getElementById('soundBtn');
+  btn.innerHTML = soundEnabled ? SVG_ICONS.soundOn : SVG_ICONS.soundOff;
+}
+
+/* ==========================================================================
+   INITIAL SETUP & ACCORDION RENDERING
+   ========================================================================== */
+function initSetup() {
+  const savedSound = localStorage.getItem('bioretos_sound');
+  if (savedSound !== null) {
+    soundEnabled = savedSound === '1';
+  }
+  actualizarBotonSonido();
+
+  // Populate seleccionados with all apartados initially
+  seleccionados = [];
+  BLOQUES_TEMAS.forEach(tema => {
+    tema.apartados.forEach(ap => seleccionados.push(ap.id));
+  });
+
+  renderTemasAccordion();
+  actualizarContadoresUI();
+}
+
+function renderTemasAccordion() {
+  const container = document.getElementById("temasAccordionContainer");
+  container.innerHTML = "";
+
+  BLOQUES_TEMAS.forEach((tema, idx) => {
+    const totalTemaPreguntas = tema.apartados.reduce((acc, ap) => {
+      return acc + bancoPreguntas.filter(p => p.tema === ap.id).length;
+    }, 0);
+
+    const accordionEl = document.createElement("div");
+    accordionEl.className = "tema-accordion"; // Starts collapsed by default!
+    accordionEl.id = "accordion_" + tema.id;
+
+    // Header
+    const headerEl = document.createElement("div");
+    headerEl.className = "tema-header";
+    headerEl.onclick = () => toggleBloqueTema(tema.id);
+    headerEl.innerHTML = `
+      <div class="tema-header-left">
+        <div class="tema-icon-box">
+          ${SVG_ICONS[tema.icono] || SVG_ICONS.microscope}
+        </div>
+        <div class="tema-title-wrap">
+          <div class="tema-title">${tema.titulo}</div>
+          <div class="tema-subtitle">${tema.apartados.length} apartados · ${totalTemaPreguntas} retos disponibles</div>
+        </div>
+      </div>
+      <div class="tema-header-right">
+        <span class="tema-badge-count" id="badge_${tema.id}">
+          ${tema.apartados.length}/${tema.apartados.length} activos
+        </span>
+        ${SVG_ICONS.chevron}
+      </div>
+    `;
+
+    // Collapsible Body
+    const bodyEl = document.createElement("div");
+    bodyEl.className = "tema-body";
+    bodyEl.id = "body_" + tema.id;
+
+    const innerEl = document.createElement("div");
+    innerEl.className = "tema-body-inner";
+
+    // Actions bar inside body
+    const actionsBar = document.createElement("div");
+    actionsBar.className = "tema-actions-bar";
+    actionsBar.innerHTML = `
+      <div class="tema-actions-label">${tema.descripcion}</div>
+      <div class="tema-actions-btns">
+        <button type="button" class="btn-mini" onclick="seleccionarTemaCompleto('${tema.id}', true)">Marcar tema</button>
+        <button type="button" class="btn-mini" onclick="seleccionarTemaCompleto('${tema.id}', false)">Desmarcar</button>
+      </div>
+    `;
+    innerEl.appendChild(actionsBar);
+
+    // Apartados Grid
+    const gridEl = document.createElement("div");
+    gridEl.className = "topic-grid";
+
+    tema.apartados.forEach(ap => {
+      const count = bancoPreguntas.filter(p => p.tema === ap.id).length;
+      const isChecked = seleccionados.includes(ap.id);
+
+      const itemLabel = document.createElement("label");
+      itemLabel.className = "topic-item " + (isChecked ? "active" : "");
+      itemLabel.id = "topicItem_" + ap.id.replace(/[^a-zA-Z0-9]/g, "_");
+
+      itemLabel.innerHTML = `
+        <div class="topic-checkbox-wrap">
+          <input type="checkbox" class="topic-checkbox" value="${ap.id}" ${isChecked ? "checked" : ""} onchange="onTopicCheckChange(this, '${tema.id}')">
+          <div class="topic-checkbox-check">${SVG_ICONS.check}</div>
+        </div>
+        <div class="topic-icon-wrap">
+          ${SVG_ICONS[ap.icon] || SVG_ICONS.atom}
+        </div>
+        <div class="topic-info">
+          <div class="topic-name">${ap.id}</div>
+          <span class="topic-badge">${count} preguntas · ${ap.desc}</span>
+        </div>
+      `;
+      gridEl.appendChild(itemLabel);
+    });
+
+    innerEl.appendChild(gridEl);
+    bodyEl.appendChild(innerEl);
+
+    accordionEl.appendChild(headerEl);
+    accordionEl.appendChild(bodyEl);
+    container.appendChild(accordionEl);
+  });
+}
+
+/* ==========================================================================
+   ACCORDION LOGIC: Single-open accordion (closing any other open theme)
+   ========================================================================== */
+function toggleBloqueTema(temaId) {
+  const allAccordions = document.querySelectorAll('.tema-accordion');
+  const targetAccordion = document.getElementById('accordion_' + temaId);
+  const wasOpen = targetAccordion.classList.contains('open');
+
+  // Close all other accordions first
+  allAccordions.forEach(acc => acc.classList.remove('open'));
+
+  // If clicked accordion wasn't already open, open it
+  if (!wasOpen) {
+    targetAccordion.classList.add('open');
+  }
+}
+
+/* ==========================================================================
+   CHECKBOX SELECTION HANDLERS
+   ========================================================================== */
+function onTopicCheckChange(checkbox, temaId) {
+  const id = checkbox.value;
+  const label = checkbox.closest('.topic-item');
+
+  if (checkbox.checked) {
+    label.classList.add('active');
+    if (!seleccionados.includes(id)) seleccionados.push(id);
+  } else {
+    label.classList.remove('active');
+    seleccionados = seleccionados.filter(x => x !== id);
+  }
+
+  actualizarContadoresUI();
+}
+
+function seleccionarTemaCompleto(temaId, estado) {
+  const tema = BLOQUES_TEMAS.find(t => t.id === temaId);
+  if (!tema) return;
+
+  tema.apartados.forEach(ap => {
+    const safeId = ap.id.replace(/[^a-zA-Z0-9]/g, "_");
+    const label = document.getElementById("topicItem_" + safeId);
+    if (label) {
+      const cb = label.querySelector('.topic-checkbox');
+      if (cb) cb.checked = estado;
+      if (estado) {
+        label.classList.add('active');
+        if (!seleccionados.includes(ap.id)) seleccionados.push(ap.id);
+      } else {
+        label.classList.remove('active');
+        seleccionados = seleccionados.filter(x => x !== ap.id);
+      }
+    }
+  });
+
+  actualizarContadoresUI();
+}
+
+function seleccionarTodosGlobal(estado) {
+  const checkboxes = document.querySelectorAll('.topic-checkbox');
+  seleccionados = [];
+
+  checkboxes.forEach(cb => {
+    cb.checked = estado;
+    const label = cb.closest('.topic-item');
+    if (estado) {
+      label.classList.add('active');
+      seleccionados.push(cb.value);
+    } else {
+      label.classList.remove('active');
+    }
+  });
+
+  actualizarContadoresUI();
+}
+
+function actualizarContadoresUI() {
+  // Update each tema badge
+  BLOQUES_TEMAS.forEach(tema => {
+    const totalTemaAps = tema.apartados.length;
+    const activosTema = tema.apartados.filter(ap => seleccionados.includes(ap.id)).length;
+    const badge = document.getElementById("badge_" + tema.id);
+    if (badge) {
+      badge.innerText = `${activosTema}/${totalTemaAps} activos`;
+      if (activosTema === 0) {
+        badge.classList.add('zero');
+      } else {
+        badge.classList.remove('zero');
+      }
+    }
+  });
+
+  // Global subtitle counter
+  const totalPreguntasListas = bancoPreguntas.filter(p => seleccionados.includes(p.tema)).length;
+  const sub = document.getElementById("globalSelectionSubtitle");
+  if (sub) {
+    sub.innerText = `${seleccionados.length} apartados marcados (${totalPreguntasListas} retos listos)`;
+  }
+
+  // Start Button state
+  const btnStart = document.getElementById("btnStartGame");
+  if (btnStart) {
+    if (seleccionados.length === 0) {
+      btnStart.disabled = true;
+      btnStart.innerHTML = `<svg class="svg-icon svg-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Selecciona al menos un apartado para jugar`;
+    } else {
+      btnStart.disabled = false;
+      btnStart.innerHTML = `
+        <svg class="svg-icon svg-stroke" viewBox="0 0 24 24" style="width:1.3em;height:1.3em;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        ¡Comenzar Reto Científico! (${totalPreguntasListas} retos)
+      `;
+    }
+  }
+}
+
+function setMode(mode) {
+  gameMode = mode;
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    if (btn.dataset.mode === mode) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
+  });
+}
+
+/* ==========================================================================
+   GAMEPLAY ENGINE
+   ========================================================================== */
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function iniciarJuego() {
+  if (seleccionados.length === 0) return;
+
+  // Filter questions by active apartados
+  let pool = bancoPreguntas.filter(p => seleccionados.includes(p.tema));
+  if (pool.length === 0) return;
+
+  pool = shuffleArray([...pool]);
+
+  if (gameMode === "10") {
+    preguntasPartida = pool.slice(0, Math.min(10, pool.length));
+  } else if (gameMode === "20") {
+    preguntasPartida = pool.slice(0, Math.min(20, pool.length));
+  } else {
+    preguntasPartida = pool;
+  }
+
+  // Shuffle options dynamically for each question
+  preguntasPartida = preguntasPartida.map(q => {
+    const indices = [0, 1, 2, 3];
+    const shuffledIndices = shuffleArray(indices);
+    const shuffledOpciones = shuffledIndices.map(idx => q.opciones[idx]);
+    const nuevaCorrecta = shuffledIndices.indexOf(q.correcta);
+    return {
+      ...q,
+      opciones: shuffledOpciones,
+      correcta: nuevaCorrecta
+    };
+  });
+
+  indiceActual = 0;
+  aciertos = 0;
+  puntosXP = 0;
+  rachaActual = 0;
+  maxRacha = 0;
+  preguntasFalladas = [];
+
+  document.getElementById("setupScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+
+  mostrarPregunta();
+}
+
+function mostrarPregunta() {
+  respondido = false;
+
+  const total = preguntasPartida.length;
+  if (indiceActual >= total) {
+    finalizarJuego();
+    return;
+  }
+
+  const q = preguntasPartida[indiceActual];
+
+  // Update UI Elements
+  document.getElementById("categoryName").innerText = q.tema;
+  document.getElementById("questionText").innerText = q.pregunta;
+  document.getElementById("progressText").innerText = `Pregunta ${indiceActual + 1} de ${total}`;
+
+  const pct = Math.round(((indiceActual + 1) / total) * 100);
+  document.getElementById("progressPercent").innerText = pct + "%";
+  document.getElementById("progressBar").style.width = pct + "%";
+
+  actualizarStatsUI();
+
+  // Hide explanation card
+  const expBox = document.getElementById("explanationBox");
+  expBox.className = "explanation-card hidden";
+
+  // Build Options
+  const container = document.getElementById("optionsContainer");
+  container.innerHTML = "";
+  const letters = ["A", "B", "C", "D"];
+
+  q.opciones.forEach((opcion, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "option-btn";
+    btn.id = "btnOption_" + i;
+    btn.onclick = () => responder(i);
+
+    btn.innerHTML = `
+      <span class="option-badge">${letters[i]}</span>
+      <span>${opcion}</span>
+    `;
+    container.appendChild(btn);
+  });
+}
+
+function actualizarStatsUI() {
+  document.getElementById("scoreText").innerText = puntosXP;
+  const streakBadge = document.getElementById("streakBadge");
+  if (rachaActual > 1) {
+    streakBadge.classList.remove("hidden");
+    document.getElementById("streakText").innerText = rachaActual;
+  } else {
+    streakBadge.classList.add("hidden");
+  }
+}
+
+function responder(indiceSeleccionado) {
+  if (respondido) return;
+  respondido = true;
+
+  const q = preguntasPartida[indiceActual];
+  const esCorrecta = (indiceSeleccionado === q.correcta);
+  const botones = document.querySelectorAll(".option-btn");
+
+  // Disable all options
+  botones.forEach(b => b.disabled = true);
+
+  const expBox = document.getElementById("explanationBox");
+  const expStatus = document.getElementById("explanationStatus");
+  const expContent = document.getElementById("explanationContent");
+
+  if (esCorrecta) {
+    aciertos++;
+    rachaActual++;
+    if (rachaActual > maxRacha) maxRacha = rachaActual;
+
+    const bono = (rachaActual > 1) ? (rachaActual - 1) * 25 : 0;
+    puntosXP += 100 + bono;
+
+    botones[indiceSeleccionado].classList.add("correct");
+
+    if (rachaActual >= 3) {
+      playSound('streak');
+    } else {
+      playSound('correct');
+    }
+
+    expBox.className = "explanation-card correct";
+    expStatus.innerHTML = `${SVG_ICONS.check} ¡Excelente deducción! (+${100 + bono} XP)`;
+    expContent.innerHTML = `<strong>💡 ¿Por qué es la respuesta correcta?</strong><br>${q.explicacion}`;
+
+  } else {
+    rachaActual = 0;
+    playSound('wrong');
+
+    botones[indiceSeleccionado].classList.add("incorrect");
+    botones[q.correcta].classList.add("correct");
+
+    preguntasFalladas.push({
+      pregunta: q.pregunta,
+      tema: q.tema,
+      elegida: q.opciones[indiceSeleccionado],
+      correcta: q.opciones[q.correcta],
+      explicacion: q.explicacion
+    });
+
+    expBox.className = "explanation-card incorrect";
+    expStatus.innerHTML = `${SVG_ICONS.cross} ¡Casi! La respuesta correcta era: "${q.opciones[q.correcta]}"`;
+    expContent.innerHTML = `<strong>💡 Explicación científica:</strong><br>${q.explicacion}`;
+  }
+
+  actualizarStatsUI();
+  expBox.classList.remove("hidden");
+  expBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  document.getElementById("btnNext").focus();
+}
+
+function siguientePregunta() {
+  indiceActual++;
+  mostrarPregunta();
+}
+
+// Keyboard Navigation
+document.addEventListener("keydown", (e) => {
+  const gameVisible = !document.getElementById("gameScreen").classList.contains("hidden");
+  if (!gameVisible) return;
+
+  const expVisible = !document.getElementById("explanationBox").classList.contains("hidden");
+  if (expVisible && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    siguientePregunta();
+    return;
+  }
+
+  if (!respondido) {
+    const keyMap = {
+      "1": 0, "a": 0, "A": 0,
+      "2": 1, "b": 1, "B": 1,
+      "3": 2, "c": 2, "C": 2,
+      "4": 3, "d": 3, "D": 3
+    };
+    if (e.key in keyMap) {
+      e.preventDefault();
+      responder(keyMap[e.key]);
+    }
+  }
+});
+
+/* ==========================================================================
+   RESULTS SCREEN & REVIEW SYSTEM
+   ========================================================================== */
+function finalizarJuego() {
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("resultScreen").classList.remove("hidden");
+
+  const total = preguntasPartida.length;
+  const pct = Math.round((aciertos / total) * 100);
+
+  document.getElementById("finalCorrect").innerText = `${aciertos} / ${total}`;
+  document.getElementById("finalPercent").innerText = `${pct}%`;
+  document.getElementById("finalXP").innerText = puntosXP;
+  document.getElementById("finalMaxStreak").innerText = maxRacha;
+
+  const trophyEl = document.getElementById("resultTrophy");
+  const titleEl = document.getElementById("resultTitle");
+  const rankEl = document.getElementById("resultRank");
+
+  if (pct === 100) {
+    trophyEl.innerText = "👑";
+    titleEl.innerText = "¡Puntuación Perfecta en BioRetos!";
+    rankEl.innerText = "🏆 Premio Nobel Escolar · ¡Dominio Absoluto!";
+    lanzarConfetti();
+    playSound('fanfare');
+  } else if (pct >= 80) {
+    trophyEl.innerText = "🌟";
+    titleEl.innerText = "¡Trabajo Científico Sobresaliente!";
+    rankEl.innerText = "🔬 Investigador/a de Élite de 1º ESO";
+    lanzarConfetti();
+    playSound('fanfare');
+  } else if (pct >= 50) {
+    trophyEl.innerText = "🧪";
+    titleEl.innerText = "¡Buen Trabajo en BioRetos!";
+    rankEl.innerText = "🥼 Científico/a en Prácticas (Sigue explorando)";
+  } else {
+    trophyEl.innerText = "📚";
+    titleEl.innerText = "¡Ánimo, la ciencia es practicar!";
+    rankEl.innerText = "🌱 Aprendiz Curioso (Repasa las explicaciones)";
+  }
+
+  const btnReview = document.getElementById("btnReview");
+  const reviewContainer = document.getElementById("reviewContainer");
+
+  if (preguntasFalladas.length > 0) {
+    btnReview.classList.remove("hidden");
+    document.getElementById("reviewCount").innerText = preguntasFalladas.length;
+    renderReviewList();
+  } else {
+    btnReview.classList.add("hidden");
+    reviewContainer.classList.add("hidden");
+  }
+}
+
+function renderReviewList() {
+  const list = document.getElementById("reviewList");
+  list.innerHTML = "";
+
+  preguntasFalladas.forEach((item, idx) => {
+    const el = document.createElement("div");
+    el.className = "review-item";
+    el.innerHTML = `
+      <div class="review-item-q">${idx + 1}. [${item.tema}] ${item.pregunta}</div>
+      <div class="review-item-answers">
+        <div class="review-item-user">✕ Tu respuesta: ${item.elegida}</div>
+        <div class="review-item-correct">✓ Respuesta correcta: ${item.correcta}</div>
+      </div>
+      <div class="review-item-exp">
+        <strong>💡 Explicación:</strong> ${item.explicacion}
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function toggleReview() {
+  const container = document.getElementById("reviewContainer");
+  container.classList.toggle("hidden");
+  if (!container.classList.contains("hidden")) {
+    container.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+function reiniciarMismosTemas() {
+  iniciarJuego();
+}
+
+function volverAjustes() {
+  document.getElementById("resultScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("setupScreen").classList.remove("hidden");
+  actualizarContadoresUI();
+}
+
+/* ==========================================================================
+   CONFETTI CANNON
+   ========================================================================== */
+function lanzarConfetti() {
+  const canvas = document.getElementById("confettiCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pieces = [];
+  const colors = ["#10b981", "#06b6d4", "#6366f1", "#f59e0b", "#ec4899", "#ffffff"];
+
+  for (let i = 0; i < 90; i++) {
+    pieces.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.4,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 3 + 2,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.floor(Math.random() * 10) - 10,
+      tiltAngleIncremental: (Math.random() * 0.07) + 0.05,
+      tiltAngle: 0
+    });
+  }
+
+  let animId;
+  let frames = 0;
+
+  function updateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frames++;
+
+    pieces.forEach(p => {
+      p.tiltAngle += p.tiltAngleIncremental;
+      p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+      p.tilt = Math.sin(p.tiltAngle - (frames / 3)) * 15;
+
+      ctx.beginPath();
+      ctx.lineWidth = p.r / 2;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + p.tilt + (p.r / 4), p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + (p.r / 4));
+      ctx.stroke();
+    });
+
+    if (frames < 140) {
+      animId = requestAnimationFrame(updateConfetti);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cancelAnimationFrame(animId);
+    }
+  }
+
+  updateConfetti();
+}
+
+// Initialize on DOM load
+document.addEventListener("DOMContentLoaded", initSetup);
+</script>
+
+</body>
+</html>
